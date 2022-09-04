@@ -110,7 +110,7 @@ int main(void)
 		glColor3f(0.f, 1.f, 0.f);
 		glVertex3f(0.6f, -0.4f, 0.f);
 		glColor3f(0.f, 0.f, 1.f);
-		glVertex3f(0.f, 0.6f, 0.f);
+		glVertex3f(1.0f, 1.0f, 0.f);
 		glEnd();
 		glfwSwapBuffers(window);
 
