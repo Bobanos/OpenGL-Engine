@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
+static float rotationDirectionValue = 1.0f;
 
 static void error_callback(int error, const char* description) { fputs(description, stderr); }
 
@@ -20,6 +20,10 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
+
+	if (key == GLFW_KEY_B && action == GLFW_PRESS)
+		rotationDirectionValue = rotationDirectionValue * -1.0f;
+
 	printf("key_callback [%d,%d,%d,%d] \n", key, scancode, action, mods);
 }
 
@@ -102,7 +106,7 @@ int main(void)
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		glRotatef((float)glfwGetTime() * 50.f, 0.f, 0.f, 1.f);
+		glRotatef((float)glfwGetTime() * 50.f, 0.f, 0.f, rotationDirectionValue);
 
 		glBegin(GL_TRIANGLES);
 		glColor3f(1.f, 0.f, 0.f);

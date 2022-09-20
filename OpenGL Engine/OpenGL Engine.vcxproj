@@ -76,12 +76,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>H:\ZPG\OpenGL Engine\OpenGL Engine\Libraries\glm-master;H:\ZPG\OpenGL Engine\OpenGL Engine\Libraries\glfw-3.3.8.bin.WIN32\include;H:\ZPG\OpenGL Engine\OpenGL Engine\Libraries\glew-2.1.0\include;H:\ZPG\OpenGL Engine\OpenGL Engine\Libraries\stb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\OpenGL-Engine\OpenGL Engine\Libraries\glm-master;..\..\OpenGL-Engine\OpenGL Engine\Libraries\glfw-3.3.8.bin.WIN32\include;..\..\OpenGL-Engine\OpenGL Engine\Libraries\glew-2.1.0\include;..\..\OpenGL-Engine\OpenGL Engine\Libraries\stb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>H:\ZPG\OpenGL Engine\OpenGL Engine\Libraries\glew-2.1.0\lib\Release\Win32;H:\ZPG\OpenGL Engine\OpenGL Engine\Libraries\glfw-3.3.8.bin.WIN32\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\OpenGL-Engine\OpenGL Engine\Libraries\glew-2.1.0\lib\Release\Win32;..\..\OpenGL-Engine\OpenGL Engine\Libraries\glfw-3.3.8.bin.WIN32\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glu32.lib;glfw3.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -107,13 +107,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>H:\ZPG\OpenGL Engine\OpenGL Engine\Libraries\glm-master;H:\ZPG\OpenGL Engine\OpenGL Engine\Libraries\glfw-3.3.8.bin.WIN32\include;H:\ZPG\OpenGL Engine\OpenGL Engine\Libraries\glew-2.1.0\include;H:\ZPG\OpenGL Engine\OpenGL Engine\Libraries\stb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\School Projects\OpenGL Engine\OpenGL Engine\Libraries\glm-master;C:\School Projects\OpenGL Engine\Libraries\glfw-3.3.8.bin.WIN32\include;C:\School Projects\OpenGL Engine\Libraries\glew-2.1.0\include;C:\School Projects\OpenGL Engine\Libraries\stb\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;glu32.lib;glfw3.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>H:\ZPG\OpenGL Engine\OpenGL Engine\Libraries\glfw-3.3.8.bin.WIN32\lib-vc2022;H:\ZPG\OpenGL Engine\OpenGL Engine\Libraries\glew-2.1.0\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\OpenGL Engine\OpenGL Engine\Libraries\glfw-3.3.8.bin.WIN32\lib-vc2022;..\..\OpenGL Engine\OpenGL Engine\Libraries\glew-2.1.0\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
