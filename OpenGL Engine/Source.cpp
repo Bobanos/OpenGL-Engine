@@ -21,10 +21,10 @@ float points[] = {
 };
 
 const float pointsWithColors[] = {
-   -.5f, -.5f, .5f, 1, 1, 1, 0, 1,
-   -.5f, .5f, .5f, 1, 1, 0, 0, 1,
-   .5f, .5f, .5f, 1, 0, 0, 0, 1,
-   .5f, -.5f, .5f, 1, 0, 1, 0, 1,
+   -.5f, -.5f, .5f, 1.f, 1.f, 1.f, 0.f, 1.f,
+   -.5f, .5f, .5f, 1.f, 1.f, 0.f, 0.f, 1.f,
+   .5f, .5f, .5f, 1.f, 0.f, 0.f, 0.f, 1.f,
+   .5f, -.5f, .5f, 1.f, 0.f, 1.f, 0.f, 1.f,
 };
 
 const char* vertex_shader =
@@ -43,20 +43,20 @@ const char* fragment_shader =
 
 const char* vertex_shader2 =
 "#version 330\n"
-"layout(location=0) in vec4 vp;"
-"layout(location=1) in vec4 vo;"
-"out vec4 colour;"
+"layout(location=0) in vec4 in_Position;"
+"layout(location=1) in vec4 in_Color;"
+"out vec4 color;"
 "void main () {"
-"     gl_Position = vec4 (vp, 1.0);"
-"	  colour = vo;"
+"     gl_Position = in_Position;"
+"	  color = in_Color;"
 "}";
 
 const char* fragment_shader2 =
 "#version 330\n"
-"in vec4 colour"
+"in vec4 color;"
 "out vec4 frag_colour;"
 "void main () {"
-"     frag_colour = colour;"
+"     frag_colour = color;"
 "}";
 
 
@@ -170,22 +170,24 @@ int main(void)
 	GLuint VBO = 0;
 	glGenBuffers(1, &VBO); // generate the VBO
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(pointsWithColors), pointsWithColors, GL_STATIC_DRAW);
 
 	//Vertex Array Object (VAO)
 	GLuint VAO = 0;
 	glGenVertexArrays(1, &VAO); //generate the VAO
 	glBindVertexArray(VAO); //bind the VAO
 	glEnableVertexAttribArray(0); //enable vertex attributes
+	glEnableVertexAttribArray(1); //enable vertex attributes
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, NULL);
 
 	//create and compile shaders
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertex_shader, NULL);
+	glShaderSource(vertexShader, 1, &vertex_shader2, NULL);
 	glCompileShader(vertexShader);
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragment_shader, NULL);
+	glShaderSource(fragmentShader, 1, &fragment_shader2, NULL);
 	glCompileShader(fragmentShader);
 	GLuint shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, fragmentShader);
