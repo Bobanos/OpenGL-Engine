@@ -27,6 +27,13 @@ const float pointsWithColors[] = {
    .5f, -.5f, .5f, 1.f, 0.f, 1.f, 0.f, 1.f,
 };
 
+const float pointsWithColors2[] = {
+   1.f, 1.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f,
+   -1.f, -1.f, 1.f, .5f, 0.f, 1.f, 0.f, 1.f,
+   -1.f, 1.f, 1.f, .5f, 1.f, 0.f, 0.f, 1.f,
+   1.f, -1.f, 1.f, .5f, 0.f, 0.f, 1.f, 1.f,
+};
+
 const char* vertex_shader =
 "#version 330\n"
 "layout(location=0) in vec3 vp;"
@@ -54,9 +61,8 @@ const char* vertex_shader2 =
 const char* fragment_shader2 =
 "#version 330\n"
 "in vec4 color;"
-"out vec4 frag_colour;"
 "void main () {"
-"     frag_colour = color;"
+"     gl_FragColor = color;"
 "}";
 
 
