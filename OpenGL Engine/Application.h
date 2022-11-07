@@ -38,7 +38,7 @@ public:
 
 	void set_camera();
 	void init();
-	void init_specific_version(int major, int minor);
+	void init(int major, int minor);
 	void gameLoop(void);
 	void destroy(void);
 

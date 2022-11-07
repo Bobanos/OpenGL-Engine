@@ -1,4 +1,4 @@
-//Include GLEW
+ï»¿//Include GLEW
 #include <GL/glew.h>
 //Include GLFW
 #include <GLFW/glfw3.h>
@@ -21,17 +21,10 @@ float points[] = {
 };
 
 const float pointsWithColors[] = {
-   -.5f, -.5f, .5f, 1.f, 1.f, 1.f, 0.f, 1.f,
-   -.5f, .5f, .5f, 1.f, 1.f, 0.f, 0.f, 1.f,
-   .5f, .5f, .5f, 1.f, 0.f, 0.f, 0.f, 1.f,
-   .5f, -.5f, .5f, 1.f, 0.f, 1.f, 0.f, 1.f,
-};
-
-const float pointsWithColors2[] = {
-   1.f, 1.f, 1.f, .5f, 1.f, 1.f, 1.f, 1.f,
-   -1.f, -1.f, 1.f, .5f, 0.f, 1.f, 0.f, 1.f,
-   -1.f, 1.f, 1.f, .5f, 1.f, 0.f, 0.f, 1.f,
-   1.f, -1.f, 1.f, .5f, 0.f, 0.f, 1.f, 1.f,
+   -.5f, -.5f, .5f, 1, 1, 1, 0, 1,
+   -.5f, .5f, .5f, 1, 1, 0, 0, 1,
+   .5f, .5f, .5f, 1, 0, 0, 0, 1,
+   .5f, -.5f, .5f, 1, 0, 1, 0, 1,
 };
 
 const char* vertex_shader =
@@ -50,20 +43,49 @@ const char* fragment_shader =
 
 const char* vertex_shader2 =
 "#version 330\n"
-"layout(location=0) in vec4 in_Position;"
-"layout(location=1) in vec4 in_Color;"
-"out vec4 color;"
+"layout(location=0) in vec4 vp;"
+"layout(location=1) in vec4 vo;"
+"out vec4 colour;"
 "void main () {"
-"     gl_Position = in_Position;"
-"	  color = in_Color;"
+"     gl_Position = vec4 (vp, 1.0);"
+"	  colour = vo;"
 "}";
 
 const char* fragment_shader2 =
 "#version 330\n"
-"in vec4 color;"
+"in vec4 colour"
+"out vec4 frag_colour;"
 "void main () {"
-"     gl_FragColor = color;"
+"     frag_colour = colour;"
 "}";
+
+
+
+static void error_callback(int error, const char* description) { fputs(description, stderr); }
+
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, GL_TRUE);
+
+	printf("key_callback [%d,%d,%d,%d] \n", key, scancode, action, mods);
+}
+
+static void window_focus_callback(GLFWwindow* window, int focused) { printf("window_focus_callback \n"); }
+
+static void window_iconify_callback(GLFWwindow* window, int iconified) { printf("window_iconify_callback \n"); }
+
+static void window_size_callback(GLFWwindow* window, int width, int height) {
+	printf("resize %d, %d \n", width, height);
+	glViewport(0, 0, width, height);
+}
+
+static void cursor_callback(GLFWwindow* window, double x, double y) { printf("cursor_callback \n"); }
+
+static void button_callback(GLFWwindow* window, int button, int action, int mode) {
+	if (action == GLFW_PRESS) printf("button_callback [%d,%d,%d]\n", button, action, mode);
+}
+
 
 
 //GLM test
@@ -144,33 +166,26 @@ int main(void)
 	glLoadIdentity();
 	glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 
-
-
-
-
-
 	//vertex buffer object (VBO)
 	GLuint VBO = 0;
 	glGenBuffers(1, &VBO); // generate the VBO
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(pointsWithColors), pointsWithColors, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
 
 	//Vertex Array Object (VAO)
 	GLuint VAO = 0;
 	glGenVertexArrays(1, &VAO); //generate the VAO
 	glBindVertexArray(VAO); //bind the VAO
 	glEnableVertexAttribArray(0); //enable vertex attributes
-	glEnableVertexAttribArray(1); //enable vertex attributes
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, NULL);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
 	//create and compile shaders
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertex_shader2, NULL);
+	glShaderSource(vertexShader, 1, &vertex_shader, NULL);
 	glCompileShader(vertexShader);
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragment_shader2, NULL);
+	glShaderSource(fragmentShader, 1, &fragment_shader, NULL);
 	glCompileShader(fragmentShader);
 	GLuint shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, fragmentShader);
@@ -199,14 +214,9 @@ int main(void)
 		glDrawArrays(GL_TRIANGLES, 0, 3); //mode,first,count
 		// update other events like input handling
 		glfwPollEvents();
-		// put the stuff we’ve been drawing onto the display
+		// put the stuff weï¿½ve been drawing onto the display
 		glfwSwapBuffers(window);
 	}
-
-
-
-
-
 
 	glfwDestroyWindow(window);
 	glfwTerminate();

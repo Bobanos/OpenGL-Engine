@@ -14,10 +14,9 @@ private:
 	GLuint VAO;
 
 public:
-	float* model;
+	Model();
 
-	Model(float model[]);
-	void generate_VBO();
+	void generate_VBO(float* model_data);
 	void generate_VAO();
 	void bind_VAO();
 
