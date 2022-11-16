@@ -6,7 +6,7 @@ Model::Model()
 	Model::VAO = 0;
 }
 
-void Model::generate_VBO(float *model_data)
+void Model::generate_VBO(const float model_data[], int size_of_data)
 {
 	//static const float pointsWithColors[] = {
  //  -.5f, -.5f, .5f, 1.f, 1.f, 1.f, 0.f, 1.f,
@@ -24,8 +24,8 @@ void Model::generate_VBO(float *model_data)
 	//vertex buffer object (VBO)
 	glGenBuffers(1, &VBO); // generate the VBO
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(model_data), model_data, GL_STATIC_DRAW); // TODO
-	fprintf(stdout, "model data size %i\n", sizeof(model_data));
+	glBufferData(GL_ARRAY_BUFFER, size_of_data, model_data, GL_STATIC_DRAW); // TODO
+	fprintf(stdout, "model data size %i %i\n", sizeof(model_data), size_of_data);
 }
 
 void Model::generate_VAO()

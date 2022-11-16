@@ -4,13 +4,20 @@ Shader::Shader(bool is_fragment)
 {
 	if(is_fragment)
 	{
+		printf("Constructed fragment shader\n");
 		Shader::shader_id = glCreateShader(GL_FRAGMENT_SHADER);
 	}
-	Shader::shader_id = glCreateShader(GL_VERTEX_SHADER);
+	else
+	{
+		printf("Constructed vertex shader\n");
+		Shader::shader_id = glCreateShader(GL_VERTEX_SHADER);
+	}
+
 }
 
 void Shader::setSource(const char* shader_code)
 {
+	//printf("value of shader_code: %s\n", shader_code);
 	glShaderSource(Shader::shader_id, 1, &shader_code, NULL);
 }
 

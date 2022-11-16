@@ -16,7 +16,7 @@ private:
 public:
 	Model();
 
-	void generate_VBO(float* model_data);
+	void generate_VBO(const float model_data[], int size_of_data);
 	void generate_VAO();
 	void bind_VAO();
 
