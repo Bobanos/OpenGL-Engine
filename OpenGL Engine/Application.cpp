@@ -238,12 +238,11 @@ void Application::init(int major, int minor)
 
 void Application::gameLoop()
 {
+	Scene scene;
 	Model model;
 	DrawableObject drawableObject1 = DrawableObject(&model);
 	drawableObject1.model->generate_VBO(pointsWithColors, sizeof(pointsWithColors));
 	drawableObject1.model->generate_VAO();
-	//model.generate_VBO(pointsWithColors, sizeof(pointsWithColors));
-	//model.generate_VAO();
 
 	ShaderProgram shader_program;
 	shader_program.AttachShaders(vertex_shader, fragment_shader);
@@ -251,14 +250,16 @@ void Application::gameLoop()
 	shader_program.CheckCompileStatus();
 	shader_program.CheckLinkStatus();
 
+	scene.AddToVector(&drawableObject1, &shader_program);
 
 	while (!glfwWindowShouldClose(window)) {
 		// clear color and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		shader_program.UseProgram();
-		drawableObject1.model->bind_VAO();
+		//shader_program.UseProgram();
+		//drawableObject1.model->bind_VAO();
 		// draw triangles
-		glDrawArrays(GL_TRIANGLES, 0, 3); //mode,first,count
+		//glDrawArrays(GL_TRIANGLES, 0, 3); //mode,first,count
+		scene.DrawAllObjects();
 		// update other events like input handling
 		glfwPollEvents();
 		// put the stuff weve been drawing onto the display
