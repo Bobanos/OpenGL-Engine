@@ -6,6 +6,7 @@
 //Include the standard C++ headers  
 #include <stdlib.h>
 #include <stdio.h>
+#include <string>
 
 class Shader
 {
@@ -16,6 +17,7 @@ public:
 	void checkCompileStatus();
 	GLuint get_shader_id();
 private:
+	std::string shader_type;
 	GLuint shader_id;
 	GLint compile_status;
 };

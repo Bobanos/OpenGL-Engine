@@ -5,14 +5,15 @@ Shader::Shader(bool is_fragment)
 	if(is_fragment)
 	{
 		printf("***Constructed fragment shader\n");
+		Shader::shader_type = "Fragment";
 		Shader::shader_id = glCreateShader(GL_FRAGMENT_SHADER);
 	}
 	else
 	{
 		printf("***Constructed vertex shader\n");
+		Shader::shader_type = "Vertex";
 		Shader::shader_id = glCreateShader(GL_VERTEX_SHADER);
 	}
-
 }
 
 void Shader::setSource(const char* shader_code)
@@ -33,8 +34,12 @@ void Shader::checkCompileStatus() {
 		glGetShaderiv(Shader::shader_id, GL_INFO_LOG_LENGTH, &infoLogLength);
 		GLchar* strInfoLog = new GLchar[infoLogLength + 1];
 		glGetShaderInfoLog(Shader::shader_id, infoLogLength, NULL, strInfoLog);
-		fprintf(stderr, "***Compile failure: %s\n", strInfoLog);
+		fprintf(stderr, "***Compile %s shader failure: %s\n", Shader::shader_type.c_str(), strInfoLog);
 		delete[] strInfoLog;
+	}
+	else
+	{
+		printf("***Compile %s shader success\n", Shader::shader_type.c_str());
 	}
 }
 
