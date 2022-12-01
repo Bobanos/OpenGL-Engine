@@ -4,6 +4,8 @@
 
 class DrawableObject
 {
+public:
 	Model *model;
+	DrawableObject(Model *model);
 };
 

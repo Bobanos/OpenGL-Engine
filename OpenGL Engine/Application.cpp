@@ -1,6 +1,8 @@
 #include "Application.h"
 #include "Model.h"
 #include "ShaderProgram.h"
+#include "DrawableObject.h"
+#include "Scene.h"
 
 static float points[] = {
 	0.0f, 0.5f, 0.0f,
@@ -237,8 +239,11 @@ void Application::init(int major, int minor)
 void Application::gameLoop()
 {
 	Model model;
-	model.generate_VBO(pointsWithColors, sizeof(pointsWithColors));
-	model.generate_VAO();
+	DrawableObject drawableObject1 = DrawableObject(&model);
+	drawableObject1.model->generate_VBO(pointsWithColors, sizeof(pointsWithColors));
+	drawableObject1.model->generate_VAO();
+	//model.generate_VBO(pointsWithColors, sizeof(pointsWithColors));
+	//model.generate_VAO();
 
 	ShaderProgram shader_program;
 	shader_program.AttachShaders(vertex_shader, fragment_shader);
@@ -251,7 +256,7 @@ void Application::gameLoop()
 		// clear color and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		shader_program.UseProgram();
-		model.bind_VAO();
+		drawableObject1.model->bind_VAO();
 		// draw triangles
 		glDrawArrays(GL_TRIANGLES, 0, 3); //mode,first,count
 		// update other events like input handling
