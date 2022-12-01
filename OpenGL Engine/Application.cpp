@@ -247,7 +247,6 @@ void Application::gameLoop()
 	ShaderProgram shader_program;
 	shader_program.AttachShaders(vertex_shader, fragment_shader);
 	shader_program.LinkProgram();
-	shader_program.CheckCompileStatus();
 	shader_program.CheckLinkStatus();
 
 	scene.AddToVector(&drawableObject1, &shader_program);

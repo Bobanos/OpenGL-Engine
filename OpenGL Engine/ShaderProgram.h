@@ -12,11 +12,9 @@ public:
 	void AttachShaders(GLuint vertex_shader, GLuint fragment_shader);
 	void LinkProgram();
 	void CheckLinkStatus();
-	void CheckCompileStatus();
 	void UseProgram();
 private:
 	GLuint shader_program_id;
-	GLint compile_status;
 	GLint link_status;
 };
 

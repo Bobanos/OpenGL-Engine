@@ -14,7 +14,7 @@ void Scene::AddToVector(DrawableObject *receivedDrawableObject, ShaderProgram *r
 
 void Scene::DrawAllObjects()
 {
-	unsigned int vecSize = vectorOfModels.size();
+	int vecSize = vectorOfModels.size();
 	for (int i = 0; i < vecSize; i++) 
 	{
 		vectorOfModels[i].shaderProgram->UseProgram();

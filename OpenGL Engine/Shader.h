@@ -13,8 +13,10 @@ public:
 	Shader(bool is_fragment);
 	void setSource(const char* shader_code);
 	void compile();
+	void checkCompileStatus();
 	GLuint get_shader_id();
 private:
 	GLuint shader_id;
+	GLint compile_status;
 };
 

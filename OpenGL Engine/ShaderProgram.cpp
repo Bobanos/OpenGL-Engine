@@ -10,6 +10,7 @@ Shader ShaderProgram::CreateVertexShader(const char* vertex_shader_code)
 	Shader vertex_shader(false);
 	vertex_shader.setSource(vertex_shader_code);
 	vertex_shader.compile();
+	vertex_shader.checkCompileStatus();
 	return vertex_shader;
 }
 
@@ -18,6 +19,7 @@ Shader ShaderProgram::CreateFragmentShader(const char* fragment_shader_code)
 	Shader fragment_shader(true);
 	fragment_shader.setSource(fragment_shader_code);
 	fragment_shader.compile();
+	fragment_shader.checkCompileStatus();
 	return fragment_shader;
 }
 
@@ -38,20 +40,6 @@ void ShaderProgram::AttachShaders(GLuint vertex_shader, GLuint fragment_shader)
 void ShaderProgram::LinkProgram()
 {
 	glLinkProgram(ShaderProgram::shader_program_id);
-}
-
-void ShaderProgram::CheckCompileStatus()
-{
-	glGetProgramiv(ShaderProgram::shader_program_id, GL_COMPILE_STATUS, &compile_status);
-	if (compile_status == GL_FALSE)
-	{
-		GLint infoLogLength;
-		glGetProgramiv(ShaderProgram::shader_program_id, GL_INFO_LOG_LENGTH, &infoLogLength);
-		GLchar* strInfoLog = new GLchar[infoLogLength + 1];
-		glGetProgramInfoLog(ShaderProgram::shader_program_id, infoLogLength, NULL, strInfoLog);
-		fprintf(stderr, "Compile failure: %s\n", strInfoLog);
-		delete[] strInfoLog;
-	}
 }
 
 void ShaderProgram::CheckLinkStatus()
