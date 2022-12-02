@@ -56,6 +56,24 @@ void ShaderProgram::CheckLinkStatus()
 	}
 }
 
+GLint ShaderProgram::GetUniformLocation() {
+	GLint id = glGetUniformLocation(ShaderProgram::shader_program_id, "modelMatrix"); 
+	if (id == -1) 
+	{
+		fprintf(stderr, "***Could not get uniform location by the name modelMatrix\n");
+	}
+	return id;
+}
+
+GLint ShaderProgram::GetUniformLocation(std::string name_of_variable) {
+	GLint id = glGetUniformLocation(ShaderProgram::shader_program_id, name_of_variable.c_str());
+	if (id == -1) 
+	{
+	fprintf(stderr, "***Could not get uniform location by the name *%s*\n", name_of_variable.c_str());
+	}
+	return id;
+}
+
 void ShaderProgram::UseProgram()
 {
 	glUseProgram(shader_program_id);

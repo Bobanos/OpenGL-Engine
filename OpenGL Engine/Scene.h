@@ -17,7 +17,7 @@ public:
 	std::vector<model_shader> vectorOfModels;
 
 	Scene();
-	void AddToVector(DrawableObject *drawableObject, ShaderProgram *shaderProgram);
+	void AddToVector(DrawableObject* receivedDrawableObject, ShaderProgram* receivedShaderProgram);
 	void DrawAllObjects();
 };
 

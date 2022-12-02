@@ -12,6 +12,8 @@ public:
 	void AttachShaders(GLuint vertex_shader, GLuint fragment_shader);
 	void LinkProgram();
 	void CheckLinkStatus();
+	GLint GetUniformLocation();
+	GLint GetUniformLocation(std::string name_of_variable);
 	void UseProgram();
 private:
 	GLuint shader_program_id;
