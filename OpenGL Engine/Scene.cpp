@@ -20,6 +20,6 @@ void Scene::DrawAllObjects()
 		vectorOfModels[i].shaderProgram->UseProgram();
 		vectorOfModels[i].drawableObject->UniformMatrix4fv(vectorOfModels[i].shaderProgram->GetUniformLocation("modelMatrix"));
 		vectorOfModels[i].drawableObject->model->bind_VAO();
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, vectorOfModels[i].drawableObject->model->GetCountOfIndices());
 	}
 }

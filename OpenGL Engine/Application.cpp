@@ -3,6 +3,10 @@
 #include "ShaderProgram.h"
 #include "DrawableObject.h"
 #include "Scene.h"
+#include "Models/sphere.h"
+#include "Models/plain.h"
+#include "Models/suzi_flat.h"
+#include "Models/suzi_smooth.h"
 
 static float points[] = {
 	0.0f, 0.5f, 0.0f,
@@ -37,6 +41,25 @@ const char* vertex_shader =
 "}";
 
 const char* fragment_shader =
+"#version 330\n"
+"in vec4 colour;"
+"out vec4 frag_colour;"
+"void main () {"
+"     frag_colour = colour;"
+"}";
+
+const char* vertex_shader2 =
+"#version 330\n"
+"layout(location=0) in vec3 vp;"
+"layout(location=1) in vec3 vo;"
+"uniform mat4 modelMatrix;"
+"out vec4 colour;"
+"void main () {"
+"     gl_Position = modelMatrix * vec4 (vp, 1.0);"
+"	  colour = vec4 (vo, 1.0);"
+"}";
+
+const char* fragment_shader2 =
 "#version 330\n"
 "in vec4 colour;"
 "out vec4 frag_colour;"
@@ -141,7 +164,7 @@ void Application::init()
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
-	glfwSetWindowAspectRatio(window, 4, 3);
+	//glfwSetWindowAspectRatio(window, 4, 3);
 
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
@@ -226,25 +249,23 @@ void Application::init(int major, int minor)
 
 void Application::gameLoop()
 {
-	//glm::mat4 modelMatrix = glm::mat4(1.0f);
-	//M = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 1.0f, 0.0f));
-	//M = glm::rotate(M, angle, glm::vec3(1.0f, 0.0f, 0.0f));
-	//M = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, myView));
-	//M = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-
 	Scene scene;
 	Model model;
 	DrawableObject drawableObject1 = DrawableObject(&model);
-	drawableObject1.model->generate_VBO(pointsWithColors2, sizeof(pointsWithColors2));
-	drawableObject1.model->generate_VAO();
+	drawableObject1.model->generate_VBO(pointsWithColors2, sizeof(pointsWithColors2), sizeof(pointsWithColors) / 8);
+	drawableObject1.model->generate_VAO8();
 	drawableObject1.Rotate(180.f, glm::vec3(0.0f, 0.0f, 1.0f));
 
-	Model model2;
 	DrawableObject drawableObject2 = DrawableObject(&model);
-	drawableObject2.model->generate_VBO(pointsWithColors, sizeof(pointsWithColors));
-	drawableObject2.model->generate_VAO();
+	drawableObject2.model->generate_VBO(pointsWithColors, sizeof(pointsWithColors), sizeof(pointsWithColors) / 8);
+	drawableObject2.model->generate_VAO8();
 	drawableObject2.Scale(glm::vec3(0.3f));
 	drawableObject2.Translate(glm::vec3(0.5f, 0.5f, 0.5f));
+
+	Model model2;
+	DrawableObject drawableObject3 = DrawableObject(&model2);
+	drawableObject3.model->generate_VBO(suziSmooth, sizeof(suziSmooth), sizeof(suziSmooth) / 8);
+	drawableObject3.model->generate_VAO6();
 	
 
 	ShaderProgram shader_program;
@@ -252,8 +273,14 @@ void Application::gameLoop()
 	shader_program.LinkProgram();
 	shader_program.CheckLinkStatus();
 
+	ShaderProgram shader_program2;
+	shader_program2.AttachShaders(vertex_shader2, fragment_shader2);
+	shader_program2.LinkProgram();
+	shader_program2.CheckLinkStatus();
+
 	scene.AddToVector(&drawableObject1, &shader_program);
 	scene.AddToVector(&drawableObject2, &shader_program);
+	scene.AddToVector(&drawableObject3, &shader_program2);
 
 	while (!glfwWindowShouldClose(window)) {
 		// clear color and depth buffer
