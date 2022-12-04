@@ -76,5 +76,17 @@
     <None Include="default.frag">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="lambert.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="lambert.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="phong.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="phong.frag">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

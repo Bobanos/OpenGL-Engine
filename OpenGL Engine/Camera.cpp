@@ -152,11 +152,11 @@ void Camera::UpdateProjection(float p_fovInDegrees, float p_nearPlane, float p_f
 
 void Camera::sendCameraViewMatrixToShaderProgram(GLint id)
 {
-	//printf("wwwwwwwwwwwwwwwwwwww %f\n", Camera::speed);
-	//printf("%f %f %f %f\n", Camera::view[0][0], Camera::view[0][1], Camera::view[0][2], Camera::view[0][3]);
-	//printf("%f %f %f %f\n", Camera::view[1][0], Camera::view[1][1], Camera::view[1][2], Camera::view[1][3]);
-	//printf("%f %f %f %f\n", Camera::view[2][0], Camera::view[2][1], Camera::view[2][2], Camera::view[2][3]);
-	//printf("%f %f %f %f\n", Camera::view[3][0], Camera::view[3][1], Camera::view[3][2], Camera::view[3][3]);
+	printf("wwwwwwwwwwwwwwwwwwww %f\n", Camera::speed);
+	printf("%f %f %f %f\n", Camera::view[0][0], Camera::view[0][1], Camera::view[0][2], Camera::view[0][3]);
+	printf("%f %f %f %f\n", Camera::view[1][0], Camera::view[1][1], Camera::view[1][2], Camera::view[1][3]);
+	printf("%f %f %f %f\n", Camera::view[2][0], Camera::view[2][1], Camera::view[2][2], Camera::view[2][3]);
+	printf("%f %f %f %f\n", Camera::view[3][0], Camera::view[3][1], Camera::view[3][2], Camera::view[3][3]);
 	glUniformMatrix4fv(id, 1, GL_FALSE, &Camera::view[0][0]);
 }
 

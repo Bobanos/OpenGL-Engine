@@ -197,62 +197,57 @@ void Application::init()
 	glfwGetFramebufferSize(window, &width, &height);
 	float ratio = width / (float)height;
 	glViewport(0, 0, width, height);
-
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	//glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 }
 
 void Application::init(int major, int minor)
 {
-	window;
-	set_error_callback();
-	if (!glfwInit()) {
-		fprintf(stderr, "ERROR: could not start GLFW3\n");
-		exit(EXIT_FAILURE);
-	}
+	//window;
+	//set_error_callback();
+	//if (!glfwInit()) {
+	//	fprintf(stderr, "ERROR: could not start GLFW3\n");
+	//	exit(EXIT_FAILURE);
+	//}
 
-	//inicializace konkretni verze
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	////inicializace konkretni verze
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
+	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(width, height, "ZPG", NULL, NULL);
-	if (!window) {
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
+	//window = glfwCreateWindow(width, height, "ZPG", NULL, NULL);
+	//if (!window) {
+	//	glfwTerminate();
+	//	exit(EXIT_FAILURE);
+	//}
 
-	glfwMakeContextCurrent(window);
-	glfwSwapInterval(1);
+	//glfwMakeContextCurrent(window);
+	//glfwSwapInterval(1);
 
-	// start GLEW extension handler
-	glewExperimental = GL_TRUE;
-	glewInit();
+	//// start GLEW extension handler
+	//glewExperimental = GL_TRUE;
+	//glewInit();
 
-	set_callbacks();
+	//set_callbacks();
 
-	// get version info
-	printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
-	printf("Using GLEW %s\n", glewGetString(GLEW_VERSION));
-	printf("Vendor %s\n", glGetString(GL_VENDOR));
-	printf("Renderer %s\n", glGetString(GL_RENDERER));
-	printf("GLSL %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	int revision;
-	glfwGetVersion(&major, &minor, &revision);
-	printf("Using GLFW %i.%i.%i\n", major, minor, revision);
+	//// get version info
+	//printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
+	//printf("Using GLEW %s\n", glewGetString(GLEW_VERSION));
+	//printf("Vendor %s\n", glGetString(GL_VENDOR));
+	//printf("Renderer %s\n", glGetString(GL_RENDERER));
+	//printf("GLSL %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	//int revision;
+	//glfwGetVersion(&major, &minor, &revision);
+	//printf("Using GLFW %i.%i.%i\n", major, minor, revision);
 
-	int width, height;
-	glfwGetFramebufferSize(window, &width, &height);
-	//float ratio = width / (float)height;
-	glViewport(0, 0, width, height);
+	//int width, height;
+	//glfwGetFramebufferSize(window, &width, &height);
+	////float ratio = width / (float)height;
+	//glViewport(0, 0, width, height);
 
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	//glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+	////glMatrixMode(GL_PROJECTION);
+	////glLoadIdentity();
+	////glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 }
 
 void Application::gameLoop()
@@ -272,9 +267,11 @@ void Application::gameLoop()
 	////drawableObject2.Translate(glm::vec3(0.5f, 0.5f, 0.5f));
 
 	Model model2;
+	model2.generate_VBO(suziSmooth, sizeof(suziSmooth), sizeof(suziSmooth) / 6);
+	model2.generate_VAO6();
 	DrawableObject drawableObject3 = DrawableObject(&model2);
-	drawableObject3.model->generate_VBO(suziSmooth, sizeof(suziSmooth), sizeof(suziSmooth) / 6);
-	drawableObject3.model->generate_VAO6();
+	//drawableObject3.model->generate_VBO(suziSmooth, sizeof(suziSmooth), sizeof(suziSmooth) / 6);
+	//drawableObject3.model->generate_VAO6();
 	drawableObject3.Translate(glm::vec3(0.0f, 0.0f, 1.2f));
 	//drawableObject3.Scale(glm::vec3(0.7f));
 	//drawableObject3.Rotate(180.f, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -293,7 +290,7 @@ void Application::gameLoop()
 	//shader_program.CheckLinkStatus();
 
 	ShaderProgram shader_program2;
-	shader_program2.AttachShaders("default.vert", "default.frag");
+	shader_program2.AttachShaders("lambert.vert", "lambert.frag");
 	shader_program2.LinkProgram();
 	shader_program2.CheckLinkStatus();
 
