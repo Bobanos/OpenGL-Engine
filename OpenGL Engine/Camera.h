@@ -20,8 +20,6 @@
 #include<glm/gtx/rotate_vector.hpp>
 #include<glm/gtx/vector_angle.hpp>
 
-class ShaderProgram;
-
 class Camera
 {
 public:
@@ -57,6 +55,6 @@ private:
 	float nearPlane; 
 	float farPlane;
 
-	void InitMatricies();
+	void UpdateMatricies();
 };
 

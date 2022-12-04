@@ -34,9 +34,11 @@ const char* vertex_shader =
 "layout(location=0) in vec4 vp;"
 "layout(location=1) in vec4 vo;"
 "uniform mat4 modelMatrix;"
+"uniform mat4 viewMatrix;"
+"uniform mat4 projectionMatrix;"
 "out vec4 colour;"
 "void main () {"
-"     gl_Position = modelMatrix * vp;"
+"     gl_Position = (modelMatrix * viewMatrix * projectionMatrix) * vp;"
 "	  colour = vo;"
 "}";
 
@@ -57,7 +59,7 @@ const char* vertex_shader2 =
 "uniform mat4 projectionMatrix;"
 "out vec4 colour;"
 "void main () {"
-"     gl_Position = modelMatrix * viewMatrix * projectionMatrix * vec4 (vp, 1.0);"
+"     gl_Position = (modelMatrix * viewMatrix * projectionMatrix) * vec4 (vp, 1.0);"
 "	  colour = vec4 (vo, 1.0);"
 "}";
 
@@ -78,7 +80,6 @@ Application::Application(const unsigned width, const unsigned height)
 	Application::width = width;
 	Application::height = height;
 
-	//set_camera();
 	init();
 	gameLoop();
 	destroy();
@@ -159,22 +160,6 @@ void Application::set_callbacks()
 	glfwSetWindowSizeCallback(window, window_size_callback);
 }
 
-void Application::set_camera()
-{
-
-//// Projection matrix : 45 degree Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-//	glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.01f, 100.0f);
-//
-//	// Camera matrix
-//	glm::mat4 View = glm::lookAt(
-//		glm::vec3(10, 10, 10), // Camera is at (4,3,-3), in World Space
-//		glm::vec3(0, 0, 0), // and looks at the origin
-//		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
-//	);
-//	// Model matrix : an identity matrix (model will be at the origin)
-//	glm::mat4 Model = glm::mat4(1.0f);
-}
-
 void Application::init()
 {
 	set_error_callback();
@@ -214,9 +199,9 @@ void Application::init()
 	glViewport(0, 0, width, height);
 
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+	//glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity();
+	//glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 }
 
 void Application::init(int major, int minor)
@@ -301,11 +286,12 @@ void Application::gameLoop()
 	shader_program2.LinkProgram();
 	shader_program2.CheckLinkStatus();
 
-	//scene.AddToVector(&drawableObject1, &shader_program);
-	//scene.AddToVector(&drawableObject2, &shader_program);
+	scene.AddToVector(&drawableObject1, &shader_program);
+	scene.AddToVector(&drawableObject2, &shader_program);
 	scene.AddToVector(&drawableObject3, &shader_program2);
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_CLAMP);
 
 	while (!glfwWindowShouldClose(window)) {
 		// clear color and depth buffer

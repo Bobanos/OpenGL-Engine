@@ -3,42 +3,42 @@
 Camera::Camera(int p_worldWidth, int p_worldHeight)
 {
 	Camera::fovInDegrees = 45.0f;
-	Camera::nearPlane = 0.01f;
-	Camera::farPlane = 100.0f;
+	Camera::nearPlane = 0.1f;
+	Camera::farPlane = 200000.0f;
 
 	Camera::worldWidth = p_worldWidth;
 	Camera::worldHeight = p_worldHeight;
 	Camera::position = glm::vec3(0.0f, 0.0f, 0.0f);
 	Camera::orientation = glm::vec3(0.0f, 0.0f, -1.0f);
-	Camera::up = glm::vec3(0, 1, 0);
+	Camera::up = glm::vec3(0.0f, 1.0f, 0.0f);
 
 	Camera::firstClick = true;
 	Camera::speed = 0.1f;
 	Camera::sensitivity = 100.0f;
 
-	Camera::InitMatricies();
+	Camera::UpdateMatricies();
 }
 
 Camera::Camera(int p_worldWidth, int p_worldHeight, glm::vec3 startPosition, glm::vec3 startOrientation)
 {
-	Camera::fovInDegrees = 90.0f;
-	Camera::nearPlane = 0.01f;
-	Camera::farPlane = 100.0f;
+	Camera::fovInDegrees = 45.0f;
+	Camera::nearPlane = 0.1f;
+	Camera::farPlane = 200000.0f;
 
 	Camera::worldWidth = p_worldWidth;
 	Camera::worldHeight = p_worldHeight;
 	Camera::position = startPosition;
 	Camera::orientation = startOrientation;
-	Camera::up = glm::vec3(0, 1, 0);
+	Camera::up = glm::vec3(0.0f, 1.0f, 0.0f);
 
 	Camera::firstClick = true;
 	Camera::speed = 0.1f;
 	Camera::sensitivity = 100.0f;
 
-	Camera::InitMatricies();
+	Camera::UpdateMatricies();
 }
 
-void Camera::InitMatricies()
+void Camera::UpdateMatricies()
 {
 	// Initializes matrices
 	Camera::view = glm::lookAt(Camera::position, Camera::position + Camera::orientation, Camera::up);
@@ -50,7 +50,6 @@ void Camera::UpdateCamera(GLFWwindow* window)
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		printf("wwwwwwwwwwwwwwwwwwww %f\n", Camera::speed);
 		Camera::position += speed * Camera::orientation;
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
@@ -129,6 +128,8 @@ void Camera::UpdateCamera(GLFWwindow* window)
 		// Makes sure the next time the camera looks around it doesn't jump
 		firstClick = true;
 	}
+
+	Camera::UpdateMatricies();
 }
 
 void Camera::UpdateProjection(float p_fovInDegrees, float p_nearPlane, float p_farPlane)
@@ -140,10 +141,15 @@ void Camera::UpdateProjection(float p_fovInDegrees, float p_nearPlane, float p_f
 
 void Camera::sendCameraViewMatrixToShaderProgram(GLint id)
 {
-	glUniformMatrix4fv(id, 1, GL_FALSE, glm::value_ptr(Camera::view));
+	//printf("wwwwwwwwwwwwwwwwwwww %f\n", Camera::speed);
+	//printf("%f %f %f %f\n", Camera::view[0][0], Camera::view[0][1], Camera::view[0][2], Camera::view[0][3]);
+	//printf("%f %f %f %f\n", Camera::view[1][0], Camera::view[1][1], Camera::view[1][2], Camera::view[1][3]);
+	//printf("%f %f %f %f\n", Camera::view[2][0], Camera::view[2][1], Camera::view[2][2], Camera::view[2][3]);
+	//printf("%f %f %f %f\n", Camera::view[3][0], Camera::view[3][1], Camera::view[3][2], Camera::view[3][3]);
+	glUniformMatrix4fv(id, 1, GL_FALSE, &Camera::view[0][0]);
 }
 
 void Camera::sendCameraProjectionMatrixToShaderProgram(GLint id)
 {
-	glUniformMatrix4fv(id, 1, GL_FALSE, glm::value_ptr(Camera::projection));
+	glUniformMatrix4fv(id, 1, GL_FALSE, &Camera::projection[0][0]);
 }
