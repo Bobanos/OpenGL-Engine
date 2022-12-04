@@ -1,7 +1,7 @@
 #include "Scene.h"
 
-Scene::Scene() {
-
+Scene::Scene(int width, int height) {
+	Scene::camera = new Camera(width, height, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)); //TODO might be wrong
 }
 
 void Scene::AddToVector(DrawableObject *receivedDrawableObject, ShaderProgram *receivedShaderProgram)
@@ -19,7 +19,9 @@ void Scene::DrawAllObjects()
 	{
 		vectorOfModels[i].shaderProgram->UseProgram();
 		vectorOfModels[i].drawableObject->UniformMatrix4fv(vectorOfModels[i].shaderProgram->GetUniformLocation("modelMatrix"));
+		Scene::camera->sendCameraViewMatrixToShaderProgram(vectorOfModels[i].shaderProgram->GetUniformLocation("viewMatrix"));
+		Scene::camera->sendCameraProjectionMatrixToShaderProgram(vectorOfModels[i].shaderProgram->GetUniformLocation("projectionMatrix"));
 		vectorOfModels[i].drawableObject->model->bind_VAO();
-		glDrawArrays(GL_TRIANGLES, 0, vectorOfModels[i].drawableObject->model->GetCountOfIndices());
+		vectorOfModels[i].drawableObject->DrawArrays();
 	}
 }

@@ -39,8 +39,10 @@ public:
 	void set_callbacks();
 
 	void set_camera();
+
 	void init();
 	void init(int major, int minor);
+
 	void gameLoop(void);
 	void destroy(void);
 

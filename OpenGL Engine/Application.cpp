@@ -53,9 +53,11 @@ const char* vertex_shader2 =
 "layout(location=0) in vec3 vp;"
 "layout(location=1) in vec3 vo;"
 "uniform mat4 modelMatrix;"
+"uniform mat4 viewMatrix;"
+"uniform mat4 projectionMatrix;"
 "out vec4 colour;"
 "void main () {"
-"     gl_Position = modelMatrix * vec4 (vp, 1.0);"
+"     gl_Position = modelMatrix * viewMatrix * projectionMatrix * vec4 (vp, 1.0);"
 "	  colour = vec4 (vo, 1.0);"
 "}";
 
@@ -67,12 +69,16 @@ const char* fragment_shader2 =
 "     frag_colour = colour;"
 "}";
 
+static int x = 0; //TODO Delete after testing
+static int y = 0; //TODO Delete after testing
+static int z = 0; //TODO Delete after testing
+
 Application::Application(const unsigned width, const unsigned height)
 {
 	Application::width = width;
 	Application::height = height;
 
-	set_camera();
+	//set_camera();
 	init();
 	gameLoop();
 	destroy();
@@ -88,7 +94,27 @@ void Application::key_callback(GLFWwindow* window, int key, int scancode, int ac
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 
+	if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		x++;
+
+	if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		x--;
+
+	if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		y--;
+
+	if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		y++;
+
+	if (key == GLFW_KEY_LEFT_SHIFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		z--;
+
+	if (key == GLFW_KEY_SPACE && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		z++;
+
+
 	printf("key_callback [%d,%d,%d,%d] \n", key, scancode, action, mods);
+	printf("key controlled position [%d,%d,%d] \n", x, y, z);
 }
 
 void Application::window_focus_callback(GLFWwindow* window, int focused)
@@ -135,24 +161,22 @@ void Application::set_callbacks()
 
 void Application::set_camera()
 {
-	//GLM test
 
-// Projection matrix : 45 degree Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-	glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.01f, 100.0f);
-
-	// Camera matrix
-	glm::mat4 View = glm::lookAt(
-		glm::vec3(10, 10, 10), // Camera is at (4,3,-3), in World Space
-		glm::vec3(0, 0, 0), // and looks at the origin
-		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
-	);
-	// Model matrix : an identity matrix (model will be at the origin)
-	glm::mat4 Model = glm::mat4(1.0f);
+//// Projection matrix : 45 degree Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+//	glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.01f, 100.0f);
+//
+//	// Camera matrix
+//	glm::mat4 View = glm::lookAt(
+//		glm::vec3(10, 10, 10), // Camera is at (4,3,-3), in World Space
+//		glm::vec3(0, 0, 0), // and looks at the origin
+//		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+//	);
+//	// Model matrix : an identity matrix (model will be at the origin)
+//	glm::mat4 Model = glm::mat4(1.0f);
 }
 
 void Application::init()
 {
-	window;
 	set_error_callback();
 	if (!glfwInit()) {
 		fprintf(stderr, "ERROR: could not start GLFW3\n");
@@ -164,7 +188,6 @@ void Application::init()
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
-	//glfwSetWindowAspectRatio(window, 4, 3);
 
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
@@ -173,7 +196,7 @@ void Application::init()
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-	set_callbacks();
+	//set_callbacks();
 
 	// get version info
 	printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
@@ -249,7 +272,7 @@ void Application::init(int major, int minor)
 
 void Application::gameLoop()
 {
-	Scene scene;
+	Scene scene(width, height);
 	Model model;
 	DrawableObject drawableObject1 = DrawableObject(&model);
 	drawableObject1.model->generate_VBO(pointsWithColors2, sizeof(pointsWithColors2), sizeof(pointsWithColors) / 8);
@@ -266,7 +289,7 @@ void Application::gameLoop()
 	DrawableObject drawableObject3 = DrawableObject(&model2);
 	drawableObject3.model->generate_VBO(suziSmooth, sizeof(suziSmooth), sizeof(suziSmooth) / 8);
 	drawableObject3.model->generate_VAO6();
-	
+
 
 	ShaderProgram shader_program;
 	shader_program.AttachShaders(vertex_shader, fragment_shader);
@@ -278,17 +301,17 @@ void Application::gameLoop()
 	shader_program2.LinkProgram();
 	shader_program2.CheckLinkStatus();
 
-	scene.AddToVector(&drawableObject1, &shader_program);
-	scene.AddToVector(&drawableObject2, &shader_program);
+	//scene.AddToVector(&drawableObject1, &shader_program);
+	//scene.AddToVector(&drawableObject2, &shader_program);
 	scene.AddToVector(&drawableObject3, &shader_program2);
+
+	glEnable(GL_DEPTH_TEST);
 
 	while (!glfwWindowShouldClose(window)) {
 		// clear color and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//shader_program.UseProgram();
-		//drawableObject1.model->bind_VAO();
-		// draw triangles
-		//glDrawArrays(GL_TRIANGLES, 0, 3); //mode,first,count
+		// draw all objects
+		scene.camera->UpdateCamera(window);
 		scene.DrawAllObjects();
 		// update other events like input handling
 		glfwPollEvents();

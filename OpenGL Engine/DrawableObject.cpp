@@ -15,7 +15,7 @@ DrawableObject::DrawableObject(Model* model) {
 
 void DrawableObject::UniformMatrix4fv(GLint id)
 {
-	glUniformMatrix4fv(id, 1, GL_FALSE, &DrawableObject::modelMatrix[0][0]);
+	glUniformMatrix4fv(id, 1, GL_FALSE, &DrawableObject::modelMatrix[0][0]); //TODO may replace last paramater with value_ptr
 }
 
 void DrawableObject::Rotate(float angle_in_degrees, glm::vec3 axes) {
@@ -28,4 +28,9 @@ void DrawableObject::Scale(glm::vec3 scale) {
 
 void DrawableObject::Translate(glm::vec3 translate) {
 	DrawableObject::modelMatrix = glm::translate(DrawableObject::modelMatrix, translate);
+}
+
+void DrawableObject::DrawArrays()
+{
+	glDrawArrays(GL_TRIANGLES, 0, DrawableObject::model->GetCountOfIndices());
 }

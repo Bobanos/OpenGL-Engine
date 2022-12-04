@@ -4,6 +4,7 @@
 
 #include "ShaderProgram.h"
 #include "DrawableObject.h"
+#include "Camera.h"
 
 
 class Scene
@@ -16,8 +17,11 @@ public:
 	
 	std::vector<model_shader> vectorOfModels;
 
-	Scene();
+	Camera* camera; //TODO might be wrong
+
+	Scene(int width, int height);
 	void AddToVector(DrawableObject* receivedDrawableObject, ShaderProgram* receivedShaderProgram);
 	void DrawAllObjects();
+
 };
 
