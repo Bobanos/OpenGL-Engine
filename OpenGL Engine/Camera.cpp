@@ -4,7 +4,10 @@ Camera::Camera(int p_worldWidth, int p_worldHeight)
 {
 	Camera::fovInDegrees = 45.0f;
 	Camera::nearPlane = 0.1f;
-	Camera::farPlane = 200000.0f;
+	Camera::farPlane = 200.0f;
+
+	Camera::view = glm::mat4(1.0f);
+	Camera::projection = glm::mat4(1.0f);
 
 	Camera::worldWidth = p_worldWidth;
 	Camera::worldHeight = p_worldHeight;
@@ -23,7 +26,10 @@ Camera::Camera(int p_worldWidth, int p_worldHeight, glm::vec3 startPosition, glm
 {
 	Camera::fovInDegrees = 45.0f;
 	Camera::nearPlane = 0.1f;
-	Camera::farPlane = 200000.0f;
+	Camera::farPlane = 200.0f;
+
+	Camera::view = glm::mat4(1.0f);
+	Camera::projection = glm::mat4(1.0f);
 
 	Camera::worldWidth = p_worldWidth;
 	Camera::worldHeight = p_worldHeight;
@@ -32,7 +38,7 @@ Camera::Camera(int p_worldWidth, int p_worldHeight, glm::vec3 startPosition, glm
 	Camera::up = glm::vec3(0.0f, 1.0f, 0.0f);
 
 	Camera::firstClick = true;
-	Camera::speed = 0.1f;
+	Camera::speed = 0.01f;
 	Camera::sensitivity = 100.0f;
 
 	Camera::UpdateMatricies();
@@ -40,9 +46,14 @@ Camera::Camera(int p_worldWidth, int p_worldHeight, glm::vec3 startPosition, glm
 
 void Camera::UpdateMatricies()
 {
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	Camera::view = glm::mat4(1.0f);
+	Camera::projection = glm::mat4(1.0f);
 	// Initializes matrices
-	Camera::view = glm::lookAt(Camera::position, Camera::position + Camera::orientation, Camera::up);
-	Camera::projection = glm::perspective(glm::radians(Camera::fovInDegrees), (float)Camera::worldWidth / Camera::worldHeight, Camera::nearPlane, Camera::farPlane);
+	//Camera::view = glm::lookAt(Camera::position, Camera::position + Camera::orientation, Camera::up);
+	/*Camera::projection = glm::perspective(glm::radians(Camera::fovInDegrees), (float)Camera::worldWidth / Camera::worldHeight, Camera::nearPlane, Camera::farPlane);*/
+	//Camera::projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.01f, 100.0f);
 }
 
 void Camera::UpdateCamera(GLFWwindow* window)
@@ -50,7 +61,7 @@ void Camera::UpdateCamera(GLFWwindow* window)
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		Camera::position += speed * Camera::orientation;
+		Camera::position += speed * glm::normalize(Camera::orientation);
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
@@ -58,7 +69,7 @@ void Camera::UpdateCamera(GLFWwindow* window)
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		Camera::position += speed * -Camera::orientation;
+		Camera::position += speed * -glm::normalize(Camera::orientation);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
@@ -74,11 +85,11 @@ void Camera::UpdateCamera(GLFWwindow* window)
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 	{
-		speed = 0.4f;
+		speed = 0.04f;
 	}
 	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
 	{
-		speed = 0.1f;
+		speed = 0.01f;
 	}
 
 

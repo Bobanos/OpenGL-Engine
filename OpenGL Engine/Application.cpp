@@ -199,8 +199,8 @@ void Application::init()
 	glViewport(0, 0, width, height);
 
 
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 	//glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 }
 
@@ -246,52 +246,64 @@ void Application::init(int major, int minor)
 
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
-	float ratio = width / (float)height;
+	//float ratio = width / (float)height;
 	glViewport(0, 0, width, height);
 
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+	//glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 }
 
 void Application::gameLoop()
 {
 	Scene scene(width, height);
-	Model model;
-	DrawableObject drawableObject1 = DrawableObject(&model);
-	drawableObject1.model->generate_VBO(pointsWithColors2, sizeof(pointsWithColors2), sizeof(pointsWithColors) / 8);
-	drawableObject1.model->generate_VAO8();
-	drawableObject1.Rotate(180.f, glm::vec3(0.0f, 0.0f, 1.0f));
 
-	DrawableObject drawableObject2 = DrawableObject(&model);
-	drawableObject2.model->generate_VBO(pointsWithColors, sizeof(pointsWithColors), sizeof(pointsWithColors) / 8);
-	drawableObject2.model->generate_VAO8();
-	drawableObject2.Scale(glm::vec3(0.3f));
-	drawableObject2.Translate(glm::vec3(0.5f, 0.5f, 0.5f));
+	//Model model;
+	//DrawableObject drawableObject1 = DrawableObject(&model);
+	//drawableObject1.model->generate_VBO(pointsWithColors2, sizeof(pointsWithColors2), sizeof(pointsWithColors) / 8);
+	//drawableObject1.model->generate_VAO8();
+	////drawableObject1.Rotate(180.f, glm::vec3(0.0f, 0.0f, 1.0f));
+
+	//DrawableObject drawableObject2 = DrawableObject(&model);
+	//drawableObject2.model->generate_VBO(pointsWithColors, sizeof(pointsWithColors), sizeof(pointsWithColors) / 8);
+	//drawableObject2.model->generate_VAO8();
+	////drawableObject2.Scale(glm::vec3(0.3f));
+	////drawableObject2.Translate(glm::vec3(0.5f, 0.5f, 0.5f));
 
 	Model model2;
 	DrawableObject drawableObject3 = DrawableObject(&model2);
-	drawableObject3.model->generate_VBO(suziSmooth, sizeof(suziSmooth), sizeof(suziSmooth) / 8);
+	drawableObject3.model->generate_VBO(suziSmooth, sizeof(suziSmooth), sizeof(suziSmooth) / 6);
 	drawableObject3.model->generate_VAO6();
+	drawableObject3.Translate(glm::vec3(0.0f, 0.0f, 1.2f));
+	//drawableObject3.Scale(glm::vec3(0.7f));
+	//drawableObject3.Rotate(180.f, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	//Model model3;
+	//DrawableObject drawableObject4 = DrawableObject(&model3);
+	//drawableObject4.model->generate_VBO(plain, sizeof(plain), sizeof(plain) / 6);
+	//drawableObject4.model->generate_VAO6();
+	//drawableObject4.Translate(glm::vec3(0.0f, -1.0f, 0.0f));
+	//drawableObject4.Rotate(180.f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 
-	ShaderProgram shader_program;
-	shader_program.AttachShaders(vertex_shader, fragment_shader);
-	shader_program.LinkProgram();
-	shader_program.CheckLinkStatus();
+	//ShaderProgram shader_program;
+	//shader_program.AttachShaders(vertex_shader, fragment_shader);
+	//shader_program.LinkProgram();
+	//shader_program.CheckLinkStatus();
 
 	ShaderProgram shader_program2;
-	shader_program2.AttachShaders(vertex_shader2, fragment_shader2);
+	shader_program2.AttachShaders("default.vert", "default.frag");
 	shader_program2.LinkProgram();
 	shader_program2.CheckLinkStatus();
 
-	scene.AddToVector(&drawableObject1, &shader_program);
-	scene.AddToVector(&drawableObject2, &shader_program);
+	//scene.AddToVector(&drawableObject1, &shader_program);
+	//scene.AddToVector(&drawableObject2, &shader_program);
 	scene.AddToVector(&drawableObject3, &shader_program2);
+	//scene.AddToVector(&drawableObject4, &shader_program2);
 
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_DEPTH_CLAMP);
+	//glEnable(GL_DEPTH_CLAMP);
 
 	while (!glfwWindowShouldClose(window)) {
 		// clear color and depth buffer

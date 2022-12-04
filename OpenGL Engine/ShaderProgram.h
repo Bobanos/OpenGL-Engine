@@ -2,12 +2,19 @@
 
 #include "Shader.h"
 
+#include <string.h> 
+#include <stdio.h>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+
 class ShaderProgram
 {
 public:
 	ShaderProgram();
 	Shader CreateVertexShader(const char* vertex_shader_code);
 	Shader CreateFragmentShader(const char* fragment_shader_code);
+	std::string loadFile(const char* fname);
 	void AttachShaders(const char* vertex_shader_code, const char* fragment_shader_code);
 	void AttachShaders(GLuint vertex_shader, GLuint fragment_shader);
 	void LinkProgram();

@@ -23,10 +23,24 @@ Shader ShaderProgram::CreateFragmentShader(const char* fragment_shader_code)
 	return fragment_shader;
 }
 
-void ShaderProgram::AttachShaders(const char* vertex_shader_code, const char* fragment_shader_code)
+std::string ShaderProgram::loadFile(const char* fname)
 {
-	Shader vertex_shader = CreateVertexShader(vertex_shader_code);
-	Shader fragment_shader = CreateFragmentShader(fragment_shader_code);
+	std::ifstream file(fname);
+	if (!file.is_open())
+	{
+		printf("Unable to open file  %s\n", fname);
+		//exit(1);
+	}
+	std::stringstream fileData;
+	fileData << file.rdbuf();
+	file.close();
+	return fileData.str();
+}
+
+void ShaderProgram::AttachShaders(const char* vertex_shader_file_name, const char* fragment_shader_file_name)
+{
+	Shader vertex_shader = CreateVertexShader(ShaderProgram::loadFile(vertex_shader_file_name).c_str());
+	Shader fragment_shader = CreateFragmentShader(ShaderProgram::loadFile(fragment_shader_file_name).c_str());
 	glAttachShader(ShaderProgram::shader_program_id, vertex_shader.get_shader_id());
 	glAttachShader(ShaderProgram::shader_program_id, fragment_shader.get_shader_id());
 }
