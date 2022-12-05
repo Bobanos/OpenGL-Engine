@@ -1,7 +1,7 @@
 #include "Scene.h"
 
 Scene::Scene(int width, int height) {
-	Scene::camera = new Camera(width, height, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)); //TODO might be wrong
+	Scene::camera = new Camera(width, height, glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f)); //TODO might be wrong
 }
 
 void Scene::AddToVector(DrawableObject *receivedDrawableObject, ShaderProgram *receivedShaderProgram)

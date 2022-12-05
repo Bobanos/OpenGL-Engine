@@ -51,9 +51,10 @@ void Camera::UpdateMatricies()
 	Camera::view = glm::mat4(1.0f);
 	Camera::projection = glm::mat4(1.0f);
 	// Initializes matrices
-	//Camera::view = glm::lookAt(Camera::position, Camera::position + Camera::orientation, Camera::up);
+	Camera::view = glm::lookAt(Camera::position, Camera::position + Camera::orientation, Camera::up);
+	//Camera::view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 	/*Camera::projection = glm::perspective(glm::radians(Camera::fovInDegrees), (float)Camera::worldWidth / Camera::worldHeight, Camera::nearPlane, Camera::farPlane);*/
-	//Camera::projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.01f, 100.0f);
+	Camera::projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 }
 
 void Camera::UpdateCamera(GLFWwindow* window)
@@ -157,10 +158,10 @@ void Camera::sendCameraViewMatrixToShaderProgram(GLint id)
 	printf("%f %f %f %f\n", Camera::view[1][0], Camera::view[1][1], Camera::view[1][2], Camera::view[1][3]);
 	printf("%f %f %f %f\n", Camera::view[2][0], Camera::view[2][1], Camera::view[2][2], Camera::view[2][3]);
 	printf("%f %f %f %f\n", Camera::view[3][0], Camera::view[3][1], Camera::view[3][2], Camera::view[3][3]);
-	glUniformMatrix4fv(id, 1, GL_FALSE, &Camera::view[0][0]);
+	glUniformMatrix4fv(id, 1, GL_FALSE, glm::value_ptr(Camera::view));
 }
 
 void Camera::sendCameraProjectionMatrixToShaderProgram(GLint id)
 {
-	glUniformMatrix4fv(id, 1, GL_FALSE, &Camera::projection[0][0]);
+	glUniformMatrix4fv(id, 1, GL_FALSE, glm::value_ptr(Camera::projection));
 }

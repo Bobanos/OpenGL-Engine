@@ -6,6 +6,6 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 out vec4 colour;
 void main () {
-     gl_Position = (modelMatrix * viewMatrix * projectionMatrix) * vec4 ( vp ,1.0);
+     gl_Position = projectionMatrix * viewMatrix* modelMatrix * vec4 ( vp ,1.0);
 	 colour = vec4 ( vo ,1.0);
 }

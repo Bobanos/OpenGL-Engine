@@ -272,7 +272,7 @@ void Application::gameLoop()
 	DrawableObject drawableObject3 = DrawableObject(&model2);
 	//drawableObject3.model->generate_VBO(suziSmooth, sizeof(suziSmooth), sizeof(suziSmooth) / 6);
 	//drawableObject3.model->generate_VAO6();
-	drawableObject3.Translate(glm::vec3(0.0f, 0.0f, 1.2f));
+	drawableObject3.Translate(glm::vec3(0.0f, 0.0f, -1.2f));
 	//drawableObject3.Scale(glm::vec3(0.7f));
 	//drawableObject3.Rotate(180.f, glm::vec3(0.0f, 1.0f, 0.0f));
 
@@ -304,6 +304,7 @@ void Application::gameLoop()
 
 	while (!glfwWindowShouldClose(window)) {
 		// clear color and depth buffer
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// draw all objects
 		scene.camera->UpdateCamera(window);

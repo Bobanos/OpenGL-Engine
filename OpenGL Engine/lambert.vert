@@ -14,5 +14,5 @@ void main () {
 	worldPos = modelMatrix * vec4 ( vp ,1.0);
 	mat4 normal = modelMatrix;
 	worldNorm = transpose(inverse(modelMatrix)) * vec4(vn, 1.0);
-    gl_Position = modelMatrix * viewMatrix * projectionMatrix * vec4 ( vp ,1.0);
+    gl_Position = projectionMatrix * viewMatrix* modelMatrix * vec4 ( vp ,1.0);
 }
