@@ -23,10 +23,12 @@ void Model::generate_VAO8()
 	bind_VAO();
 	glEnableVertexAttribArray(0); //enable vertex attributes
 	glEnableVertexAttribArray(1); //enable vertex attributes
+	glEnableVertexAttribArray(2); //enable vertex attributes
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	//TODO
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float),NULL); //Cordinates
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float),(GLvoid*)(4 * sizeof(GLfloat))); //Color
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),NULL); //Cordinates
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),(GLvoid*)(3 * sizeof(GLfloat))); //Normal
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (GLvoid*)(6 * sizeof(GLfloat))); //Texture uv
 }
 
 void Model::generate_VAO6()
@@ -39,7 +41,7 @@ void Model::generate_VAO6()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	//TODO
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), NULL); //Cordinates
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)(3 * sizeof(GLfloat))); //Color
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)(3 * sizeof(GLfloat))); //Normal
 }
 
 void Model::bind_VAO()

@@ -3,77 +3,27 @@
 #include "ShaderProgram.h"
 #include "DrawableObject.h"
 #include "Scene.h"
+
 #include "Models/sphere.h"
 #include "Models/plain.h"
+#include "Models/plain_uv.h"
 #include "Models/suzi_flat.h"
 #include "Models/suzi_smooth.h"
+#include "Models/tree.h"
+#include "Models/gift.h"
+#include "Models/bushes.h"
+#include "Models/skycube.h"
 
-static float points[] = {
-	0.0f, 0.5f, 0.0f,
-	0.5f, -0.5f, 0.0f,
-   -0.5f, -0.5f, 0.0f
-};
-
-static const float pointsWithColors[] = {
-   -.5f, -.5f, .5f, 1.f, 1.f, 1.f, 0.f, 1.f,
-   -.5f, .5f, .5f, 1.f, 1.f, 0.f, 0.f, 1.f,
-   .5f, .5f, .5f, 1.f, 0.f, 0.f, 0.f, 1.f,
-   .5f, -.5f, .5f, 1.f, 0.f, 1.f, 0.f, 1.f,
-};
-
-static const float pointsWithColors2[] = {
-   1.f, 1.f, .5f, .5f, 1.f, 1.f, 1.f, 1.f,
-   -1.f, -1.f, .5f, .5f, 0.f, 1.f, 0.f, 1.f,
-   -1.f, 1.f, .5f, .5f, 1.f, 0.f, 0.f, 1.f,
-   1.f, -1.f, .5f, .5f, 0.f, 0.f, 1.f, 1.f,
-};
+#include "SOIL.h"
 
 
-const char* vertex_shader =
-"#version 330\n"
-"layout(location=0) in vec4 vp;"
-"layout(location=1) in vec4 vo;"
-"uniform mat4 modelMatrix;"
-"uniform mat4 viewMatrix;"
-"uniform mat4 projectionMatrix;"
-"out vec4 colour;"
-"void main () {"
-"     gl_Position = (modelMatrix * viewMatrix * projectionMatrix) * vp;"
-"	  colour = vo;"
-"}";
-
-const char* fragment_shader =
-"#version 330\n"
-"in vec4 colour;"
-"out vec4 frag_colour;"
-"void main () {"
-"     frag_colour = colour;"
-"}";
-
-const char* vertex_shader2 =
-"#version 330\n"
-"layout(location=0) in vec3 vp;"
-"layout(location=1) in vec3 vo;"
-"uniform mat4 modelMatrix;"
-"uniform mat4 viewMatrix;"
-"uniform mat4 projectionMatrix;"
-"out vec4 colour;"
-"void main () {"
-"     gl_Position = (modelMatrix * viewMatrix * projectionMatrix) * vec4 (vp, 1.0);"
-"	  colour = vec4 (vo, 1.0);"
-"}";
-
-const char* fragment_shader2 =
-"#version 330\n"
-"in vec4 colour;"
-"out vec4 frag_colour;"
-"void main () {"
-"     frag_colour = colour;"
-"}";
-
-static int x = 0; //TODO Delete after testing
-static int y = 0; //TODO Delete after testing
-static int z = 0; //TODO Delete after testing
+//Include GLM  
+#include "glm/glm.hpp"
+#include <glm/vec3.hpp> // glm::vec3
+#include <glm/vec4.hpp> // glm::vec4
+#include <glm/mat4x4.hpp> // glm::mat4
+#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
+#include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
 Application::Application(const unsigned width, const unsigned height)
 {
@@ -92,30 +42,6 @@ void Application::error_callback(int error, const char* description)
 
 void Application::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
-
-	if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT))
-		x++;
-
-	if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT))
-		x--;
-
-	if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT))
-		y--;
-
-	if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT))
-		y++;
-
-	if (key == GLFW_KEY_LEFT_SHIFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
-		z--;
-
-	if (key == GLFW_KEY_SPACE && (action == GLFW_PRESS || action == GLFW_REPEAT))
-		z++;
-
-
-	printf("key_callback [%d,%d,%d,%d] \n", key, scancode, action, mods);
-	printf("key controlled position [%d,%d,%d] \n", x, y, z);
 }
 
 void Application::window_focus_callback(GLFWwindow* window, int focused)
@@ -181,7 +107,7 @@ void Application::init()
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-	//set_callbacks();
+	set_callbacks();
 
 	// get version info
 	printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
@@ -254,17 +180,6 @@ void Application::gameLoop()
 {
 	Scene scene(width, height);
 
-	//Model model;
-	//DrawableObject drawableObject1 = DrawableObject(&model);
-	//drawableObject1.model->generate_VBO(pointsWithColors2, sizeof(pointsWithColors2), sizeof(pointsWithColors) / 8);
-	//drawableObject1.model->generate_VAO8();
-	////drawableObject1.Rotate(180.f, glm::vec3(0.0f, 0.0f, 1.0f));
-
-	//DrawableObject drawableObject2 = DrawableObject(&model);
-	//drawableObject2.model->generate_VBO(pointsWithColors, sizeof(pointsWithColors), sizeof(pointsWithColors) / 8);
-	//drawableObject2.model->generate_VAO8();
-	////drawableObject2.Scale(glm::vec3(0.3f));
-	////drawableObject2.Translate(glm::vec3(0.5f, 0.5f, 0.5f));
 
 	Model model2;
 	model2.generate_VBO(suziSmooth, sizeof(suziSmooth), sizeof(suziSmooth) / 6);
@@ -276,28 +191,143 @@ void Application::gameLoop()
 	//drawableObject3.Scale(glm::vec3(0.7f));
 	//drawableObject3.Rotate(180.f, glm::vec3(0.0f, 1.0f, 0.0f));
 
-	//Model model3;
-	//DrawableObject drawableObject4 = DrawableObject(&model3);
-	//drawableObject4.model->generate_VBO(plain, sizeof(plain), sizeof(plain) / 6);
-	//drawableObject4.model->generate_VAO6();
-	//drawableObject4.Translate(glm::vec3(0.0f, -1.0f, 0.0f));
+	Model model3;
+	DrawableObject drawableObject4 = DrawableObject(&model3);
+	drawableObject4.model->generate_VBO(plain, sizeof(plain), sizeof(plain) / 6);
+	drawableObject4.model->generate_VAO6();
+	drawableObject4.Translate(glm::vec3(0.0f, -1.0f, 0.0f));
 	//drawableObject4.Rotate(180.f, glm::vec3(0.0f, 1.0f, 0.0f));
+	drawableObject4.Scale(glm::vec3(10.0f));
+	//drawableObject4.Rotate(45.f, glm::vec3(1.0f, 0.0f, 0.0f));
+
+	Model model4;
+	DrawableObject drawableObject5 = DrawableObject(&model4);
+	drawableObject5.model->generate_VBO(plain_uv, sizeof(plain_uv), sizeof(plain_uv) / 8);
+	drawableObject5.model->generate_VAO8();
+	drawableObject5.Translate(glm::vec3(0.0f, -1.0f, 0.0f));
+	//drawableObject5.Rotate(180.f, glm::vec3(0.0f, 1.0f, 0.0f));
+	//drawableObject5.Scale(glm::vec3(10.0f));
+	drawableObject5.Rotate(45.f, glm::vec3(1.0f, 0.0f, 0.0f));
+
+	DrawableObject drawableObject6 = DrawableObject(&model4);
+	drawableObject6.model->generate_VBO(plain_uv, sizeof(plain_uv), sizeof(plain_uv) / 8);
+	drawableObject6.model->generate_VAO8();
+	drawableObject6.Translate(glm::vec3(0.0f, -1.0f, -3.0f));
+	//drawableObject5.Rotate(180.f, glm::vec3(0.0f, 1.0f, 0.0f));
+	//drawableObject5.Scale(glm::vec3(10.0f));
+	drawableObject6.Rotate(45.f, glm::vec3(1.0f, 0.0f, 0.0f));
 
 
-	//ShaderProgram shader_program;
-	//shader_program.AttachShaders(vertex_shader, fragment_shader);
-	//shader_program.LinkProgram();
-	//shader_program.CheckLinkStatus();
+	ShaderProgram shader_program;
+	shader_program.AttachShaders("default.vert", "default.frag");
+	shader_program.LinkProgram();
+	shader_program.CheckLinkStatus();
 
 	ShaderProgram shader_program2;
-	shader_program2.AttachShaders("lambert.vert", "lambert.frag");
+	shader_program2.AttachShaders("phong.vert", "phong.frag");
 	shader_program2.LinkProgram();
 	shader_program2.CheckLinkStatus();
 
-	//scene.AddToVector(&drawableObject1, &shader_program);
-	//scene.AddToVector(&drawableObject2, &shader_program);
-	scene.AddToVector(&drawableObject3, &shader_program2);
-	//scene.AddToVector(&drawableObject4, &shader_program2);
+	ShaderProgram shader_program3;
+	shader_program3.AttachShaders("texture.vert", "texture.frag");
+	shader_program3.LinkProgram();
+	shader_program3.CheckLinkStatus();
+
+
+
+//	/////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//		//Vertex Array Object (VAO)
+//	GLuint VBO = 0;
+//	glGenBuffers(1, &VBO); // generate the VBO
+//	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+//	glBufferData(GL_ARRAY_BUFFER, sizeof(skycube), &skycube[0], GL_STATIC_DRAW);
+//
+//	GLuint VAO = 0;
+//	glGenVertexArrays(1, &VAO); //generate the VAO
+//	glBindVertexArray(VAO); //bind the VAO
+//	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+//
+//	//enable vertex attributes
+//	glEnableVertexAttribArray(0);
+//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid*)0);
+//
+//	ShaderProgram shader_program4;
+//	shader_program4.AttachShaders("skybox.vert", "skybox.frag");
+//	shader_program4.LinkProgram();
+//	shader_program4.CheckLinkStatus();
+//
+//
+//
+//
+//
+//	Model model;
+//	DrawableObject drawableObject = DrawableObject(&model3);
+//	drawableObject.model->generate_VBO(plain_uv, sizeof(plain_uv), sizeof(plain_uv) / 8);
+//	drawableObject.model->generate_VAO8();
+//	//drawableObject.Translate(glm::vec3(0.0f, -1.0f, 0.0f));
+//	//drawableObject.Rotate(180.f, glm::vec3(0.0f, 1.0f, 0.0f));
+//	drawableObject.Scale(glm::vec3(0.3f));
+//	drawableObject.Rotate(90.f, glm::vec3(1.0f, 0.0f, 0.0f));
+//
+//	ShaderProgram shader_program3;
+//	shader_program3.AttachShaders("texture.vert", "texture.frag");
+//	shader_program3.LinkProgram();
+//	shader_program3.CheckLinkStatus();
+//
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+//	//Bind the first texture to the first texture unit.
+//	glActiveTexture(GL_TEXTURE0); // 33984 = GL_TEXTURE0
+//	//2D texture
+//	GLuint textureID1 = SOIL_load_OGL_texture("Textures/test.png", SOIL_LOAD_RGBA, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+//	if (textureID1 == NULL) {
+//		std::cout << "An error occurred while loading texture." << std::endl;
+//		//exit(EXIT_FAILURE);
+//	}
+//	glBindTexture(GL_TEXTURE_2D, textureID1);
+//
+//
+//
+//	//Cube Map (SkyBox)
+	//glActiveTexture(GL_TEXTURE1);
+//	GLuint textureID2 = SOIL_load_OGL_cubemap("Textures/posx.jpg", "Textures/negx.jpg", "Textures/posy.jpg", "Textures/negy.jpg", "Textures/posz.jpg", "Textures/negz.jpg", SOIL_LOAD_RGB, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
+//	if (textureID2 == NULL) {
+//		std::cout << "An error occurred while loading texture." << std::endl;
+//		//exit(EXIT_FAILURE);
+//	}
+//	glBindTexture(GL_TEXTURE_2D, textureID2);
+//
+//
+//
+//
+//	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+//
+
+
+
+
+
+
+	Texture texture5(5);
+	texture5.LoadTexture("Textures/test.png");
+	texture5.BindTexture();
+	Texture texture6(6);
+	texture6.LoadTexture("Textures/grass.png");
+	texture6.BindTexture();
+
+
+	scene.AddToVectorModelsShaders(&drawableObject3, &shader_program2);
+	scene.AddToVectorModelsShaders(&drawableObject4, &shader_program2);
+	scene.AddToVectorModelsShadersTextures(&drawableObject5, &shader_program3, &texture5);
+	scene.AddToVectorModelsShadersTextures(&drawableObject6, &shader_program3, &texture6);
+	//scene.AddToVector(&drawableObject, &shader_program3);
+
+	//glm::mat4 M = glm::mat4(1.0f);
+	//M = glm::scale(M, glm::vec3(0.1f));
 
 	glEnable(GL_DEPTH_TEST);
 	//glEnable(GL_DEPTH_CLAMP);
@@ -307,8 +337,33 @@ void Application::gameLoop()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// draw all objects
+
+
+		//shader_program3.UseProgram();
+		//drawableObject.UniformMatrix4fv(shader_program3.GetUniformLocation("modelMatrix"));
+		//glUniform1i(shader_program3.GetUniformLocation("textureUnitID"), 0);// set TU 0
+		//drawableObject.model->bind_VAO();
+		//drawableObject.DrawArrays();
+
+
+		//shader_program4.UseProgram();
+		//glUniformMatrix4fv(shader_program4.GetUniformLocation("modelMatrix"), 1, GL_FALSE, &M[0][0]);
+		//glUniform1i(shader_program4.GetUniformLocation("skybox"), 0); // set TU 1
+		//glBindVertexArray(VAO);
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+
+
+
+
+		//glClear(GL_DEPTH_BUFFER_BIT);
+
+
+		scene.camera->UpdateWorldWidthAndHeight(Application::width, Application::height);
 		scene.camera->UpdateCamera(window);
 		scene.DrawAllObjects();
+
 		// update other events like input handling
 		glfwPollEvents();
 		// put the stuff weve been drawing onto the display

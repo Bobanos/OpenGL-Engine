@@ -4,6 +4,7 @@
 
 #include "ShaderProgram.h"
 #include "DrawableObject.h"
+#include "Texture.h"
 #include "Camera.h"
 
 
@@ -14,14 +15,23 @@ public:
 		DrawableObject *drawableObject;
 		ShaderProgram *shaderProgram;
 	};
-	
-	std::vector<model_shader> vectorOfModels;
 
-	Camera* camera; //TODO might be wrong
+	struct model_shader_texture {
+		DrawableObject* drawableObject;
+		ShaderProgram* shaderProgram;
+		Texture* texture;
+	};
+	
+	std::vector<model_shader> vectorOfModelsShaders;
+	std::vector<model_shader_texture> vectorOfModelsShadersTextures;
+
+	Camera* camera;
+
+	int vecSize;
 
 	Scene(int width, int height);
-	void AddToVector(DrawableObject* receivedDrawableObject, ShaderProgram* receivedShaderProgram);
+	void AddToVectorModelsShaders(DrawableObject* receivedDrawableObject, ShaderProgram* receivedShaderProgram);
+	void AddToVectorModelsShadersTextures(DrawableObject* receivedDrawableObject, ShaderProgram* receivedShaderProgram, Texture* receivedTexture);
 	void DrawAllObjects();
-
 };
 

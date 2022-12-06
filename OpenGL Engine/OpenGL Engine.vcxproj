@@ -76,13 +76,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\OpenGL Engine\Libraries\stb\include;..\OpenGL Engine\Libraries\glew-2.1.0\include;..\OpenGL Engine\Libraries\glfw-3.3.8.bin.WIN32\include;..\OpenGL Engine\Libraries\glm-master;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\OpenGL Engine\Libraries\stb\include;..\OpenGL Engine\Libraries\glew-2.1.0\include;..\OpenGL Engine\Libraries\glfw-3.3.8.bin.WIN32\include;..\OpenGL Engine\Libraries\glm-master;..\OpenGL Engine\Libraries\soil\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\OpenGL Engine\Libraries\glfw-3.3.8.bin.WIN32\lib-vc2022;..\OpenGL Engine\Libraries\glew-2.1.0\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;glfw3.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\OpenGL Engine\Libraries\glfw-3.3.8.bin.WIN32\lib-vc2022;..\OpenGL Engine\Libraries\glew-2.1.0\lib\Release\Win32;..\OpenGL Engine\Libraries\soil\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;glfw3.lib;glew32.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -142,6 +142,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="default.frag" />
@@ -160,6 +162,21 @@
     <None Include="lambert.vert" />
     <None Include="phong.frag" />
     <None Include="phong.vert" />
+    <None Include="skybox.frag" />
+    <None Include="skybox.vert" />
+    <None Include="texture.frag" />
+    <None Include="texture.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Textures\grass.png" />
+    <Image Include="Textures\negx.jpg" />
+    <Image Include="Textures\negy.jpg" />
+    <Image Include="Textures\negz.jpg" />
+    <Image Include="Textures\posx.jpg" />
+    <Image Include="Textures\posy.jpg" />
+    <Image Include="Textures\posz.jpg" />
+    <Image Include="Textures\test.png" />
+    <Image Include="Textures\wooden_fence.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -28,7 +28,7 @@ public:
 
 	void UpdateCamera(GLFWwindow* window);
 	void UpdateProjection(float p_fovInDegrees, float p_nearPlane, float p_farPlane);
-
+	void UpdateWorldWidthAndHeight(int p_worldWidth, int p_worldHeight);
 
 	void sendCameraViewMatrixToShaderProgram(GLint id);
 	void sendCameraProjectionMatrixToShaderProgram(GLint id);

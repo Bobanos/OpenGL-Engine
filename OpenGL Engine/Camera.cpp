@@ -46,15 +46,16 @@ Camera::Camera(int p_worldWidth, int p_worldHeight, glm::vec3 startPosition, glm
 
 void Camera::UpdateMatricies()
 {
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	Camera::view = glm::mat4(1.0f);
-	Camera::projection = glm::mat4(1.0f);
 	// Initializes matrices
 	Camera::view = glm::lookAt(Camera::position, Camera::position + Camera::orientation, Camera::up);
-	//Camera::view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-	/*Camera::projection = glm::perspective(glm::radians(Camera::fovInDegrees), (float)Camera::worldWidth / Camera::worldHeight, Camera::nearPlane, Camera::farPlane);*/
-	Camera::projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+	Camera::projection = glm::perspective(glm::radians(Camera::fovInDegrees), (float)Camera::worldWidth / Camera::worldHeight, Camera::nearPlane, Camera::farPlane);
+	//Camera::projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+}
+
+void Camera::UpdateWorldWidthAndHeight(int p_worldWidth, int p_worldHeight) 
+{
+	Camera::worldWidth = p_worldWidth;
+	Camera::worldHeight = p_worldHeight;
 }
 
 void Camera::UpdateCamera(GLFWwindow* window)
@@ -153,11 +154,11 @@ void Camera::UpdateProjection(float p_fovInDegrees, float p_nearPlane, float p_f
 
 void Camera::sendCameraViewMatrixToShaderProgram(GLint id)
 {
-	printf("wwwwwwwwwwwwwwwwwwww %f\n", Camera::speed);
-	printf("%f %f %f %f\n", Camera::view[0][0], Camera::view[0][1], Camera::view[0][2], Camera::view[0][3]);
-	printf("%f %f %f %f\n", Camera::view[1][0], Camera::view[1][1], Camera::view[1][2], Camera::view[1][3]);
-	printf("%f %f %f %f\n", Camera::view[2][0], Camera::view[2][1], Camera::view[2][2], Camera::view[2][3]);
-	printf("%f %f %f %f\n", Camera::view[3][0], Camera::view[3][1], Camera::view[3][2], Camera::view[3][3]);
+	//printf("wwwwwwwwwwwwwwwwwwww %f\n", Camera::speed);
+	//printf("%f %f %f %f\n", Camera::view[0][0], Camera::view[0][1], Camera::view[0][2], Camera::view[0][3]);
+	//printf("%f %f %f %f\n", Camera::view[1][0], Camera::view[1][1], Camera::view[1][2], Camera::view[1][3]);
+	//printf("%f %f %f %f\n", Camera::view[2][0], Camera::view[2][1], Camera::view[2][2], Camera::view[2][3]);
+	//printf("%f %f %f %f\n", Camera::view[3][0], Camera::view[3][1], Camera::view[3][2], Camera::view[3][3]);
 	glUniformMatrix4fv(id, 1, GL_FALSE, glm::value_ptr(Camera::view));
 }
 
