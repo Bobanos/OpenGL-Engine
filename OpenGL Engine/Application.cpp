@@ -16,17 +16,6 @@
 #include "Models/skycube.h"
 
 
-#include "SOIL.h"
-
-
-//Include GLM  
-#include "glm/glm.hpp"
-#include <glm/vec3.hpp> // glm::vec3
-#include <glm/vec4.hpp> // glm::vec4
-#include <glm/mat4x4.hpp> // glm::mat4
-#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
-#include <glm/gtc/type_ptr.hpp> // glm::value_ptr
-
 Application::Application(const unsigned width, const unsigned height)
 {
 	Application::width = width;
@@ -241,82 +230,6 @@ void Application::gameLoop()
 	shader_program4.CheckLinkStatus();
 
 
-
-//	/////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//		//Vertex Array Object (VAO)
-//	GLuint VBO = 0;
-//	glGenBuffers(1, &VBO); // generate the VBO
-//	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//	glBufferData(GL_ARRAY_BUFFER, sizeof(skycube), &skycube[0], GL_STATIC_DRAW);
-//
-//	GLuint VAO = 0;
-//	glGenVertexArrays(1, &VAO); //generate the VAO
-//	glBindVertexArray(VAO); //bind the VAO
-//	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//
-//	//enable vertex attributes
-//	glEnableVertexAttribArray(0);
-//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid*)0);
-//
-//	ShaderProgram shader_program4;
-//	shader_program4.AttachShaders("skybox.vert", "skybox.frag");
-//	shader_program4.LinkProgram();
-//	shader_program4.CheckLinkStatus();
-//
-//
-//
-//
-//
-//	Model model;
-//	DrawableObject drawableObject = DrawableObject(&model3);
-//	drawableObject.model->generate_VBO(plain_uv, sizeof(plain_uv), sizeof(plain_uv) / 8);
-//	drawableObject.model->generate_VAO8();
-//	//drawableObject.Translate(glm::vec3(0.0f, -1.0f, 0.0f));
-//	//drawableObject.Rotate(180.f, glm::vec3(0.0f, 1.0f, 0.0f));
-//	drawableObject.Scale(glm::vec3(0.3f));
-//	drawableObject.Rotate(90.f, glm::vec3(1.0f, 0.0f, 0.0f));
-//
-//	ShaderProgram shader_program3;
-//	shader_program3.AttachShaders("texture.vert", "texture.frag");
-//	shader_program3.LinkProgram();
-//	shader_program3.CheckLinkStatus();
-//
-//
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//
-//
-//	//Bind the first texture to the first texture unit.
-//	glActiveTexture(GL_TEXTURE0); // 33984 = GL_TEXTURE0
-//	//2D texture
-//	GLuint textureID1 = SOIL_load_OGL_texture("Textures/test.png", SOIL_LOAD_RGBA, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
-//	if (textureID1 == NULL) {
-//		std::cout << "An error occurred while loading texture." << std::endl;
-//		//exit(EXIT_FAILURE);
-//	}
-//	glBindTexture(GL_TEXTURE_2D, textureID1);
-//
-//
-//
-//	//Cube Map (SkyBox)
-	//glActiveTexture(GL_TEXTURE1);
-//	GLuint textureID2 = SOIL_load_OGL_cubemap("Textures/posx.jpg", "Textures/negx.jpg", "Textures/posy.jpg", "Textures/negy.jpg", "Textures/posz.jpg", "Textures/negz.jpg", SOIL_LOAD_RGB, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
-//	if (textureID2 == NULL) {
-//		std::cout << "An error occurred while loading texture." << std::endl;
-//		//exit(EXIT_FAILURE);
-//	}
-//	glBindTexture(GL_TEXTURE_2D, textureID2);
-//
-//
-//
-//
-//	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-//
-
-
-
-
 	Model model7;
 	DrawableObject drawableObject7 = DrawableObject(&model7);
 	drawableObject7.model->generate_VBO(skycube, sizeof(skycube), sizeof(skycube) / 3);
@@ -346,13 +259,9 @@ void Application::gameLoop()
 	scene.AddToVectorModelsShaders(&drawableObject4, &shader_program2);
 	scene.AddToVectorModelsShadersTextures(&drawableObject5, &shader_program3, &texture5);
 	scene.AddToVectorModelsShadersTextures(&drawableObject6, &shader_program3, &texture6);
-	//scene.AddToVector(&drawableObject, &shader_program3);
 
-	//glm::mat4 M = glm::mat4(1.0f);
-	//M = glm::scale(M, glm::vec3(0.1f));
 
 	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_DEPTH_CLAMP);
 
 	while (!glfwWindowShouldClose(window)) {
 		// clear color and depth buffer
@@ -360,26 +269,6 @@ void Application::gameLoop()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// draw all objects
 
-
-		//shader_program3.UseProgram();
-		//drawableObject.UniformMatrix4fv(shader_program3.GetUniformLocation("modelMatrix"));
-		//glUniform1i(shader_program3.GetUniformLocation("textureUnitID"), 0);// set TU 0
-		//drawableObject.model->bind_VAO();
-		//drawableObject.DrawArrays();
-
-
-		//shader_program4.UseProgram();
-		//glUniformMatrix4fv(shader_program4.GetUniformLocation("modelMatrix"), 1, GL_FALSE, &M[0][0]);
-		//glUniform1i(shader_program4.GetUniformLocation("skybox"), 0); // set TU 1
-		//glBindVertexArray(VAO);
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-
-
-
-
-		//glClear(GL_DEPTH_BUFFER_BIT);
 
 
 		scene.camera->UpdateWorldWidthAndHeight(Application::width, Application::height);
