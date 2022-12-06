@@ -4,7 +4,7 @@ Camera::Camera(int p_worldWidth, int p_worldHeight)
 {
 	Camera::fovInDegrees = 45.0f;
 	Camera::nearPlane = 0.1f;
-	Camera::farPlane = 200.0f;
+	Camera::farPlane = 2000.0f;
 
 	Camera::view = glm::mat4(1.0f);
 	Camera::projection = glm::mat4(1.0f);
@@ -26,7 +26,7 @@ Camera::Camera(int p_worldWidth, int p_worldHeight, glm::vec3 startPosition, glm
 {
 	Camera::fovInDegrees = 45.0f;
 	Camera::nearPlane = 0.1f;
-	Camera::farPlane = 200.0f;
+	Camera::farPlane = 2000.0f;
 
 	Camera::view = glm::mat4(1.0f);
 	Camera::projection = glm::mat4(1.0f);
@@ -49,7 +49,6 @@ void Camera::UpdateMatricies()
 	// Initializes matrices
 	Camera::view = glm::lookAt(Camera::position, Camera::position + Camera::orientation, Camera::up);
 	Camera::projection = glm::perspective(glm::radians(Camera::fovInDegrees), (float)Camera::worldWidth / Camera::worldHeight, Camera::nearPlane, Camera::farPlane);
-	//Camera::projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 }
 
 void Camera::UpdateWorldWidthAndHeight(int p_worldWidth, int p_worldHeight) 
