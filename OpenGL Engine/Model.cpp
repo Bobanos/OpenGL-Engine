@@ -6,6 +6,37 @@ Model::Model()
 	Model::VAO = 0;
 }
 
+void Model::loadModelFromFile(std::string modelFileName)
+{
+	Assimp::Importer importer;
+	unsigned int importOptions = aiProcess_Triangulate
+		| aiProcess_OptimizeMeshes              // slouèení malých plošek
+		| aiProcess_JoinIdenticalVertices       // NUTNÉ jinak hodnì duplikuje
+		| aiProcess_Triangulate                 // prevod vsech ploch na trojuhelniky
+		| aiProcess_CalcTangentSpace;           // vypocet tangenty, nutny pro spravne pouziti normalove mapy
+	const aiScene* aisceneP = importer.ReadFile(modelFileName.c_str(), importOptions);
+	if (aisceneP) {
+		aiMesh* mesh = aisceneP->mMeshes[0];
+		for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+			for (unsigned int j = 0; j < 3; j++)
+			{
+				Model::data.push_back(mesh->mVertices[mesh->mFaces[i].mIndices[j]].x);
+				Model::data.push_back(mesh->mVertices[mesh->mFaces[i].mIndices[j]].y);
+				Model::data.push_back(mesh->mVertices[mesh->mFaces[i].mIndices[j]].z);
+				Model::data.push_back(mesh->mNormals[mesh->mFaces[i].mIndices[j]].x);
+				Model::data.push_back(mesh->mNormals[mesh->mFaces[i].mIndices[j]].y);
+				Model::data.push_back(mesh->mNormals[mesh->mFaces[i].mIndices[j]].z);
+				Model::data.push_back(mesh->mTextureCoords[0][mesh->mFaces[i].mIndices[j]].x);
+				Model::data.push_back(mesh->mTextureCoords[0][mesh->mFaces[i].mIndices[j]].y);
+			}
+		}
+	}
+	else {
+		printf("Could not load model file named: %s, %s", modelFileName.c_str(), importer.GetErrorString());
+		exit(EXIT_FAILURE);
+	}
+}
+
 void Model::generate_VBO(const float model_data[], int size_of_data, int count)
 {
 	//vertex buffer object (VBO)
@@ -14,6 +45,18 @@ void Model::generate_VBO(const float model_data[], int size_of_data, int count)
 	glBufferData(GL_ARRAY_BUFFER, size_of_data, model_data, GL_STATIC_DRAW); // TODO
 
 	Model::count_of_indices = count;
+}
+
+void Model::generate_VBO(std::string modelFileName)
+{
+	Model::loadModelFromFile(modelFileName);
+
+	//vertex buffer object (VBO)
+	glGenBuffers(1, &VBO); // generate the VBO
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, Model::data.size() * sizeof(float), &Model::data[0], GL_STATIC_DRAW); // TODO
+
+	Model::count_of_indices = Model::data.size() / 8;
 }
 
 void Model::generate_VAO8()

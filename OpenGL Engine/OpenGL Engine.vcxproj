@@ -76,13 +76,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\OpenGL Engine\Libraries\stb\include;..\OpenGL Engine\Libraries\glew-2.1.0\include;..\OpenGL Engine\Libraries\glfw-3.3.8.bin.WIN32\include;..\OpenGL Engine\Libraries\glm-master;..\OpenGL Engine\Libraries\soil\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\OpenGL Engine\Libraries\stb\include;..\OpenGL Engine\Libraries\glew-2.1.0\include;..\OpenGL Engine\Libraries\glfw-3.3.8.bin.WIN32\include;..\OpenGL Engine\Libraries\glm-master;..\OpenGL Engine\Libraries\soil\include;..\OpenGL Engine\Libraries\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\OpenGL Engine\Libraries\glfw-3.3.8.bin.WIN32\lib-vc2022;..\OpenGL Engine\Libraries\glew-2.1.0\lib\Release\Win32;..\OpenGL Engine\Libraries\soil\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;glfw3.lib;glew32.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\OpenGL Engine\Libraries\glfw-3.3.8.bin.WIN32\lib-vc2022;..\OpenGL Engine\Libraries\glew-2.1.0\lib\Release\Win32;..\OpenGL Engine\Libraries\soil\lib;..\OpenGL Engine\Libraries\assimp\lib\Win32\v141\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;glfw3.lib;glew32.lib;SOIL.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

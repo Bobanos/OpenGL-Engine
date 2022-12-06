@@ -53,7 +53,7 @@ void Application::window_size_callback(GLFWwindow* window, int width, int height
 
 void Application::cursor_callback(GLFWwindow* window, double x, double y)
 {
-	printf("cursor_callback \n");
+	//printf("cursor_callback \n");
 }
 
 void Application::button_callback(GLFWwindow* window, int button, int action, int mode)
@@ -171,6 +171,16 @@ void Application::gameLoop()
 {
 	Scene scene(width, height);
 
+	Model houseModel;
+	houseModel.generate_VBO("Models/house.obj");
+	houseModel.generate_VAO8();
+	DrawableObject drawableHouse = DrawableObject(&houseModel);
+
+	Model zombieModel;
+	zombieModel.generate_VBO("Models/zombie.obj");
+	zombieModel.generate_VAO8();
+	DrawableObject drawableZombie1 = DrawableObject(&zombieModel);
+
 
 	Model model2;
 	model2.generate_VBO(suziSmooth, sizeof(suziSmooth), sizeof(suziSmooth) / 6);
@@ -252,6 +262,13 @@ void Application::gameLoop()
 	Texture texture6(6);
 	texture6.LoadTexture("Textures/grass.png");
 	texture6.BindTexture();
+	Texture houseTexture(7);
+	houseTexture.LoadTexture("Textures/house.png");
+	houseTexture.BindTexture();
+	Texture zombieTexture(8);
+	zombieTexture.LoadTexture("Textures/zombie.png");
+	zombieTexture.BindTexture();
+	
 
 	scene.AddSkybox(&drawableObject7, &shader_program4, &skybox);
 
@@ -259,14 +276,17 @@ void Application::gameLoop()
 	scene.AddToVectorModelsShaders(&drawableObject4, &shader_program2);
 	scene.AddToVectorModelsShadersTextures(&drawableObject5, &shader_program3, &texture5);
 	scene.AddToVectorModelsShadersTextures(&drawableObject6, &shader_program3, &texture6);
+	scene.AddToVectorModelsShadersTextures(&drawableHouse, &shader_program3, &houseTexture);
+	scene.AddToVectorModelsShadersTextures(&drawableZombie1, &shader_program3, &zombieTexture);
 
 
 	glEnable(GL_DEPTH_TEST);
-
+	glEnable(GL_STENCIL_TEST);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 	while (!glfwWindowShouldClose(window)) {
 		// clear color and depth buffer
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		// draw all objects
 
 
