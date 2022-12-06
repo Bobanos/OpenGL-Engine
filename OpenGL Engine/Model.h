@@ -20,6 +20,7 @@ public:
 	void generate_VBO(const float model_data[], int size_of_data, int count);
 	void generate_VAO8();
 	void generate_VAO6();
+	void generate_skybox_VAO();
 	void bind_VAO();
 
 	GLsizei GetCountOfIndices();

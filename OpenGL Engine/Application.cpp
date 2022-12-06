@@ -3,6 +3,7 @@
 #include "ShaderProgram.h"
 #include "DrawableObject.h"
 #include "Scene.h"
+#include "Skybox.h"
 
 #include "Models/sphere.h"
 #include "Models/plain.h"
@@ -13,6 +14,7 @@
 #include "Models/gift.h"
 #include "Models/bushes.h"
 #include "Models/skycube.h"
+
 
 #include "SOIL.h"
 
@@ -233,6 +235,11 @@ void Application::gameLoop()
 	shader_program3.LinkProgram();
 	shader_program3.CheckLinkStatus();
 
+	ShaderProgram shader_program4;
+	shader_program4.AttachShaders("skybox.vert", "skybox.frag");
+	shader_program4.LinkProgram();
+	shader_program4.CheckLinkStatus();
+
 
 
 //	/////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -310,6 +317,20 @@ void Application::gameLoop()
 
 
 
+	Model model7;
+	DrawableObject drawableObject7 = DrawableObject(&model7);
+	drawableObject7.model->generate_VBO(skycube, sizeof(skycube), sizeof(skycube) / 3);
+	drawableObject7.model->generate_skybox_VAO();
+	drawableObject7.Translate(glm::vec3(0.0f, -1.0f, 0.0f));
+	//drawableObject7.Rotate(180.f, glm::vec3(0.0f, 1.0f, 0.0f));
+	drawableObject7.Scale(glm::vec3(90.0f));
+	//drawableObject7.Rotate(45.f, glm::vec3(1.0f, 0.0f, 0.0f));
+
+
+	Skybox skybox(99);
+	skybox.LoadCubemap();
+	skybox.BindTexture();
+
 
 
 	Texture texture5(5);
@@ -319,6 +340,7 @@ void Application::gameLoop()
 	texture6.LoadTexture("Textures/grass.png");
 	texture6.BindTexture();
 
+	scene.AddSkybox(&drawableObject7, &shader_program4, &skybox);
 
 	scene.AddToVectorModelsShaders(&drawableObject3, &shader_program2);
 	scene.AddToVectorModelsShaders(&drawableObject4, &shader_program2);
@@ -362,7 +384,8 @@ void Application::gameLoop()
 
 		scene.camera->UpdateWorldWidthAndHeight(Application::width, Application::height);
 		scene.camera->UpdateCamera(window);
-		scene.DrawAllObjects();
+		scene.DrawAllObjectsWithSkybox();
+		//scene.DrawAllObjects();
 
 		// update other events like input handling
 		glfwPollEvents();

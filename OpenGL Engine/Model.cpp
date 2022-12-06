@@ -44,6 +44,17 @@ void Model::generate_VAO6()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)(3 * sizeof(GLfloat))); //Normal
 }
 
+void Model::generate_skybox_VAO()
+{
+	//Vertex Array Object (VAO)
+	glGenVertexArrays(1, &VAO); //generate the VAO
+	bind_VAO();
+	glEnableVertexAttribArray(0); //enable vertex attributes
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	//TODO
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL); //Cordinates
+}
+
 void Model::bind_VAO()
 {
 	glBindVertexArray(VAO); //bind the VAO
