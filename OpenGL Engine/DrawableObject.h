@@ -18,6 +18,7 @@ public:
 	void Rotate(float angle, glm::vec3 axes);
 	void Scale(glm::vec3 scale);
 	void Translate(glm::vec3 translate);
+	void ClearModelMatrix();
 	void DrawArrays();
 private:
 	glm::mat4 modelMatrix;

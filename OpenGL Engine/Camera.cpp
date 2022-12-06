@@ -166,3 +166,13 @@ void Camera::sendCameraProjectionMatrixToShaderProgram(GLint id)
 {
 	glUniformMatrix4fv(id, 1, GL_FALSE, glm::value_ptr(Camera::projection));
 }
+
+glm::vec3 Camera::GetCameraPosition()
+{
+	return Camera::position;
+}
+
+glm::vec3 Camera::GetCameraOrientation()
+{
+	return Camera::orientation;
+}

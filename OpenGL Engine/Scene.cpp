@@ -56,6 +56,10 @@ void Scene::DrawAllObjects()
 
 void Scene::DrawAllObjectsWithSkybox()
 {
+
+	Scene::model_shader_skybox.drawableObject->ClearModelMatrix();
+	Scene::model_shader_skybox.drawableObject->Translate(Scene::camera->GetCameraPosition());
+
 	Scene::model_shader_skybox.shaderProgram->UseProgram();
 	Scene::model_shader_skybox.drawableObject->UniformMatrix4fv(Scene::model_shader_skybox.shaderProgram->GetUniformLocation("modelMatrix"));
 	Scene::camera->sendCameraViewMatrixToShaderProgram(Scene::model_shader_skybox.shaderProgram->GetUniformLocation("viewMatrix"));
@@ -63,6 +67,8 @@ void Scene::DrawAllObjectsWithSkybox()
 	Scene::model_shader_skybox.skybox->Uniform1i(Scene::model_shader_skybox.shaderProgram->GetUniformLocation("skybox"));
 	Scene::model_shader_skybox.drawableObject->model->bind_VAO();
 	Scene::model_shader_skybox.drawableObject->DrawArrays();
+
+	glClear(GL_DEPTH_BUFFER_BIT);
 
 	vecSize = vectorOfModelsShaders.size();
 	for (int i = 0; i < vecSize; i++)

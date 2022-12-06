@@ -33,6 +33,9 @@ public:
 	void sendCameraViewMatrixToShaderProgram(GLint id);
 	void sendCameraProjectionMatrixToShaderProgram(GLint id);
 
+	glm::vec3 GetCameraPosition();
+	glm::vec3 GetCameraOrientation();
+
 private:
 	glm::mat4 view;
 	glm::mat4 projection;
