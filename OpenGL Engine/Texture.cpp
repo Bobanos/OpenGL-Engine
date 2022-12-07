@@ -16,6 +16,13 @@ void Texture::LoadTexture(std::string textureFileName)
 		printf("An error occurred while loading texture from file: %s", textureFileName.c_str());
 	}
 }
+void Texture::Parameters() 
+{
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
 void Texture::BindTexture()
 {
 	glBindTexture(GL_TEXTURE_2D, Texture::textureID);

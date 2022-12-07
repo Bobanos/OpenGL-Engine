@@ -14,6 +14,7 @@ public:
 	Texture(int textureUnit);
 	void ActiveTexture();
 	void LoadTexture(std::string textureFileName);
+	void Parameters();
 	void BindTexture();
 	void Uniform1i(GLint id);
 

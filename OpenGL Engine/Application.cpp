@@ -1,20 +1,6 @@
 #include "Application.h"
-#include "Model.h"
-#include "ShaderProgram.h"
-#include "DrawableObject.h"
-#include "Scene.h"
-#include "Skybox.h"
 
-#include "Models/sphere.h"
-#include "Models/plain.h"
-#include "Models/plain_uv.h"
-#include "Models/suzi_flat.h"
-#include "Models/suzi_smooth.h"
-#include "Models/tree.h"
-#include "Models/gift.h"
-#include "Models/bushes.h"
-#include "Models/skycube.h"
-
+int x, y;
 
 Application::Application(const unsigned width, const unsigned height)
 {
@@ -51,14 +37,29 @@ void Application::window_size_callback(GLFWwindow* window, int width, int height
 	glViewport(0, 0, width, height);
 }
 
-void Application::cursor_callback(GLFWwindow* window, double x, double y)
+void Application::cursor_callback(GLFWwindow* window, double cx, double cy)
 {
 	//printf("cursor_callback \n");
+	x = cx;
+	y = cy;
 }
 
 void Application::button_callback(GLFWwindow* window, int button, int action, int mode)
 {
 	if (action == GLFW_PRESS) printf("button_callback [%d,%d,%d]\n", button, action, mode);
+
+	if (action == GLFW_PRESS) {
+		int width, height;
+		glfwGetFramebufferSize(window, &width, &height);
+		GLbyte color[4];
+		GLfloat depth;
+		GLuint index; // identifikace tìlesa
+		int newy = height - y;
+		glReadPixels(x, newy, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+		glReadPixels(x, newy, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+		glReadPixels(x, newy, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
+		printf("Clicked on pixel %d, %d, color %02hhx%02hhx%02hhx%02hhx, depth % f, stencil index % u\n", x, y, color[0], color[1], color[2], color[3], depth, index);
+	}
 }
 
 void Application::set_error_callback()
@@ -169,54 +170,76 @@ void Application::init(int major, int minor)
 
 void Application::gameLoop()
 {
+	// Ball scene to test phong shader
+	Scene ballScene(width, height);
+
+	Model ballModel;
+	ballModel.generate_VBO(sphere, sizeof(sphere), sizeof(sphere) / 6);
+	ballModel.generate_VAO6();
+
+	ShaderProgram ballPhongShaderProgram;
+	ballPhongShaderProgram.AttachShaders("phong.vert", "phong.frag");
+	ballPhongShaderProgram.LinkProgram();
+	ballPhongShaderProgram.CheckLinkStatus();
+
+	DrawableObject drawableBallLeft = DrawableObject(&ballModel);
+	drawableBallLeft.Translate(glm::vec3(-3.0f, .0f, 0.0f));
+	DrawableObject drawableBallRight = DrawableObject(&ballModel);
+	drawableBallRight.Translate(glm::vec3(3.0f, .0f, 0.0f));
+	DrawableObject drawableBallDown = DrawableObject(&ballModel);
+	drawableBallDown.Translate(glm::vec3(0.0f, .0f, 3.0f));
+	DrawableObject drawableBallUp = DrawableObject(&ballModel);
+	drawableBallUp.Translate(glm::vec3(0.0f, .0f, -3.0f));
+
+
+	ballScene.AddToVectorModelsShaders(&drawableBallLeft, &ballPhongShaderProgram);
+	ballScene.AddToVectorModelsShaders(&drawableBallRight, &ballPhongShaderProgram);
+	ballScene.AddToVectorModelsShaders(&drawableBallDown, &ballPhongShaderProgram);
+	ballScene.AddToVectorModelsShaders(&drawableBallUp, &ballPhongShaderProgram);
+
+
+
+	// Main Scene
+
 	Scene scene(width, height);
 
 	Model houseModel;
 	houseModel.generate_VBO("Models/house.obj");
 	houseModel.generate_VAO8();
-	DrawableObject drawableHouse = DrawableObject(&houseModel);
 
 	Model zombieModel;
 	zombieModel.generate_VBO("Models/zombie.obj");
 	zombieModel.generate_VAO8();
+
+	Model terrainModel;
+	terrainModel.generate_VBO("Models/teren.obj");
+	terrainModel.generate_VAO8();
+
+	Model treeModel;
+	treeModel.generate_VBO("Models/tree.obj");
+	treeModel.generate_VAO8();
+
+	DrawableObject drawableHouse = DrawableObject(&houseModel);
+	drawableHouse.Translate(glm::vec3(0.0f, 0.0f, -15.0f));
+
 	DrawableObject drawableZombie1 = DrawableObject(&zombieModel);
+	drawableZombie1.Translate(glm::vec3(0.0f, 0.0f, 15.0f));
 
+	DrawableObject drawableTerrain = DrawableObject(&terrainModel);
+	drawableTerrain.Scale(glm::vec3 (2.0f));
 
-	Model model2;
-	model2.generate_VBO(suziSmooth, sizeof(suziSmooth), sizeof(suziSmooth) / 6);
-	model2.generate_VAO6();
-	DrawableObject drawableObject3 = DrawableObject(&model2);
-	//drawableObject3.model->generate_VBO(suziSmooth, sizeof(suziSmooth), sizeof(suziSmooth) / 6);
-	//drawableObject3.model->generate_VAO6();
-	drawableObject3.Translate(glm::vec3(0.0f, 0.0f, -1.2f));
-	//drawableObject3.Scale(glm::vec3(0.7f));
-	//drawableObject3.Rotate(180.f, glm::vec3(0.0f, 1.0f, 0.0f));
+	DrawableObject drawableTree1 = DrawableObject(&treeModel);
+	drawableTree1.Translate(glm::vec3(12.0f, 0.0f, 15.0f));
+	drawableTree1.Scale(glm::vec3(0.2f));
 
-	Model model3;
-	DrawableObject drawableObject4 = DrawableObject(&model3);
-	drawableObject4.model->generate_VBO(plain, sizeof(plain), sizeof(plain) / 6);
-	drawableObject4.model->generate_VAO6();
-	drawableObject4.Translate(glm::vec3(0.0f, -1.0f, 0.0f));
-	//drawableObject4.Rotate(180.f, glm::vec3(0.0f, 1.0f, 0.0f));
-	drawableObject4.Scale(glm::vec3(10.0f));
-	//drawableObject4.Rotate(45.f, glm::vec3(1.0f, 0.0f, 0.0f));
+	DrawableObject drawableTree2 = DrawableObject(&treeModel);
+	drawableTree2.Translate(glm::vec3(15.0f, 0.0f, 12.0f));
+	drawableTree2.Scale(glm::vec3(0.1f));
 
-	Model model4;
-	DrawableObject drawableObject5 = DrawableObject(&model4);
-	drawableObject5.model->generate_VBO(plain_uv, sizeof(plain_uv), sizeof(plain_uv) / 8);
-	drawableObject5.model->generate_VAO8();
-	drawableObject5.Translate(glm::vec3(0.0f, -1.0f, 0.0f));
-	//drawableObject5.Rotate(180.f, glm::vec3(0.0f, 1.0f, 0.0f));
-	//drawableObject5.Scale(glm::vec3(10.0f));
-	drawableObject5.Rotate(45.f, glm::vec3(1.0f, 0.0f, 0.0f));
-
-	DrawableObject drawableObject6 = DrawableObject(&model4);
-	drawableObject6.model->generate_VBO(plain_uv, sizeof(plain_uv), sizeof(plain_uv) / 8);
-	drawableObject6.model->generate_VAO8();
-	drawableObject6.Translate(glm::vec3(0.0f, -1.0f, -3.0f));
-	//drawableObject5.Rotate(180.f, glm::vec3(0.0f, 1.0f, 0.0f));
-	//drawableObject5.Scale(glm::vec3(10.0f));
-	drawableObject6.Rotate(45.f, glm::vec3(1.0f, 0.0f, 0.0f));
+	Model skycubeModel;
+	DrawableObject drawableOSkycube = DrawableObject(&skycubeModel);
+	drawableOSkycube.model->generate_VBO(skycube, sizeof(skycube), sizeof(skycube) / 3);
+	drawableOSkycube.model->generate_skybox_VAO();
 
 
 	ShaderProgram shader_program;
@@ -229,25 +252,19 @@ void Application::gameLoop()
 	shader_program2.LinkProgram();
 	shader_program2.CheckLinkStatus();
 
-	ShaderProgram shader_program3;
-	shader_program3.AttachShaders("texture.vert", "texture.frag");
-	shader_program3.LinkProgram();
-	shader_program3.CheckLinkStatus();
+	ShaderProgram textureShader;
+	textureShader.AttachShaders("texture.vert", "texture.frag");
+	textureShader.LinkProgram();
+	textureShader.CheckLinkStatus();
 
-	ShaderProgram shader_program4;
-	shader_program4.AttachShaders("skybox.vert", "skybox.frag");
-	shader_program4.LinkProgram();
-	shader_program4.CheckLinkStatus();
+	ShaderProgram skyboxShader;
+	skyboxShader.AttachShaders("skybox.vert", "skybox.frag");
+	skyboxShader.LinkProgram();
+	skyboxShader.CheckLinkStatus();
 
 
-	Model model7;
-	DrawableObject drawableObject7 = DrawableObject(&model7);
-	drawableObject7.model->generate_VBO(skycube, sizeof(skycube), sizeof(skycube) / 3);
-	drawableObject7.model->generate_skybox_VAO();
-	drawableObject7.Translate(glm::vec3(0.0f, -1.0f, 0.0f));
-	//drawableObject7.Rotate(180.f, glm::vec3(0.0f, 1.0f, 0.0f));
-	drawableObject7.Scale(glm::vec3(90.0f));
-	//drawableObject7.Rotate(45.f, glm::vec3(1.0f, 0.0f, 0.0f));
+
+
 
 
 	Skybox skybox(99);
@@ -256,12 +273,13 @@ void Application::gameLoop()
 
 
 
-	Texture texture5(5);
-	texture5.LoadTexture("Textures/test.png");
-	texture5.BindTexture();
-	Texture texture6(6);
-	texture6.LoadTexture("Textures/grass.png");
-	texture6.BindTexture();
+	Texture treeTexture(5);
+	treeTexture.LoadTexture("Textures/tree.png");
+	treeTexture.BindTexture();
+	Texture grassTexture(6);
+	grassTexture.LoadTexture("Textures/grass.png");
+	grassTexture.BindTexture();
+	grassTexture.Parameters();
 	Texture houseTexture(7);
 	houseTexture.LoadTexture("Textures/house.png");
 	houseTexture.BindTexture();
@@ -270,14 +288,12 @@ void Application::gameLoop()
 	zombieTexture.BindTexture();
 	
 
-	scene.AddSkybox(&drawableObject7, &shader_program4, &skybox);
-
-	scene.AddToVectorModelsShaders(&drawableObject3, &shader_program2);
-	scene.AddToVectorModelsShaders(&drawableObject4, &shader_program2);
-	scene.AddToVectorModelsShadersTextures(&drawableObject5, &shader_program3, &texture5);
-	scene.AddToVectorModelsShadersTextures(&drawableObject6, &shader_program3, &texture6);
-	scene.AddToVectorModelsShadersTextures(&drawableHouse, &shader_program3, &houseTexture);
-	scene.AddToVectorModelsShadersTextures(&drawableZombie1, &shader_program3, &zombieTexture);
+	scene.AddSkybox(&drawableOSkycube, &skyboxShader, &skybox);
+	scene.AddToVectorModelsShadersTextures(&drawableHouse, &textureShader, &houseTexture);
+	scene.AddToVectorModelsShadersTextures(&drawableZombie1, &textureShader, &zombieTexture);
+	scene.AddToVectorModelsShadersTextures(&drawableTerrain, &textureShader, &grassTexture);
+	scene.AddToVectorModelsShadersTextures(&drawableTree1, &textureShader, &treeTexture);
+	scene.AddToVectorModelsShadersTextures(&drawableTree2, &textureShader, &treeTexture);
 
 
 	glEnable(GL_DEPTH_TEST);
@@ -285,16 +301,21 @@ void Application::gameLoop()
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 	while (!glfwWindowShouldClose(window)) {
 		// clear color and depth buffer
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		//glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		// draw all objects
 
 
+		ballScene.camera->UpdateWorldWidthAndHeight(Application::width, Application::height);
+		ballScene.camera->UpdateCamera(window);
+		ballScene.DrawAllBalls();
 
-		scene.camera->UpdateWorldWidthAndHeight(Application::width, Application::height);
-		scene.camera->UpdateCamera(window);
-		scene.DrawAllObjectsWithSkybox();
-		//scene.DrawAllObjects();
+
+
+
+		//scene.camera->UpdateWorldWidthAndHeight(Application::width, Application::height);
+		//scene.camera->UpdateCamera(window);
+		//scene.DrawAllObjectsWithSkybox();
 
 		// update other events like input handling
 		glfwPollEvents();

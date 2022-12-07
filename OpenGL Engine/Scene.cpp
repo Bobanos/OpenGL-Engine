@@ -1,7 +1,11 @@
 #include "Scene.h"
 
 Scene::Scene(int width, int height) {
-	Scene::camera = new Camera(width, height, glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f)); //TODO might be wrong
+	Scene::camera = new Camera(width, height, glm::vec3(0.0f, 2.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+}
+
+Scene::Scene(int width, int height, glm::vec3 cameraPosition, glm::vec3 cameraOrientation) {
+	Scene::camera = new Camera(width, height, cameraPosition, cameraOrientation); //broken for some reason
 }
 
 void Scene::AddToVectorModelsShaders(DrawableObject *receivedDrawableObject, ShaderProgram *receivedShaderProgram)
@@ -28,6 +32,21 @@ void Scene::AddSkybox(DrawableObject* receivedDrawableObject, ShaderProgram* rec
 	Scene::model_shader_skybox.skybox = receivedSkybox;
 }
 
+void Scene::DrawAllBalls()
+{
+	vecSize = vectorOfModelsShaders.size();
+	for (int i = 0; i < vecSize; i++)
+	{
+		vectorOfModelsShaders[i].shaderProgram->UseProgram();
+		vectorOfModelsShaders[i].drawableObject->UniformMatrix4fv(vectorOfModelsShaders[i].shaderProgram->GetUniformLocation("modelMatrix"));
+		Scene::camera->sendCameraViewMatrixToShaderProgram(vectorOfModelsShaders[i].shaderProgram->GetUniformLocation("viewMatrix"));
+		Scene::camera->sendCameraProjectionMatrixToShaderProgram(vectorOfModelsShaders[i].shaderProgram->GetUniformLocation("projectionMatrix"));
+		Scene::camera->sendCameraPositionToShaderProgram(vectorOfModelsShaders[i].shaderProgram->GetUniformLocation("cameraPos"));
+		vectorOfModelsShaders[i].drawableObject->model->bind_VAO();
+		vectorOfModelsShaders[i].drawableObject->DrawArrays();
+	}
+}
+
 void Scene::DrawAllObjects()
 {
 	vecSize = vectorOfModelsShaders.size();
@@ -41,22 +60,23 @@ void Scene::DrawAllObjects()
 		vectorOfModelsShaders[i].drawableObject->DrawArrays();
 	}
 
-	vecSize = vectorOfModelsShadersTextures.size();
-	for (int i = 0; i < vecSize; i++)
-	{
-		vectorOfModelsShadersTextures[i].shaderProgram->UseProgram();
-		vectorOfModelsShadersTextures[i].drawableObject->UniformMatrix4fv(vectorOfModelsShadersTextures[i].shaderProgram->GetUniformLocation("modelMatrix"));
-		Scene::camera->sendCameraViewMatrixToShaderProgram(vectorOfModelsShadersTextures[i].shaderProgram->GetUniformLocation("viewMatrix"));
-		Scene::camera->sendCameraProjectionMatrixToShaderProgram(vectorOfModelsShadersTextures[i].shaderProgram->GetUniformLocation("projectionMatrix"));
-		vectorOfModelsShadersTextures[i].texture->Uniform1i(vectorOfModelsShadersTextures[i].shaderProgram->GetUniformLocation("textureUnitID"));
-		vectorOfModelsShadersTextures[i].drawableObject->model->bind_VAO();
-		vectorOfModelsShadersTextures[i].drawableObject->DrawArrays();
-	}
+	//vecSize = vectorOfModelsShadersTextures.size();
+	//for (int i = 0; i < vecSize; i++)
+	//{
+	//	vectorOfModelsShadersTextures[i].shaderProgram->UseProgram();
+	//	vectorOfModelsShadersTextures[i].drawableObject->UniformMatrix4fv(vectorOfModelsShadersTextures[i].shaderProgram->GetUniformLocation("modelMatrix"));
+	//	Scene::camera->sendCameraViewMatrixToShaderProgram(vectorOfModelsShadersTextures[i].shaderProgram->GetUniformLocation("viewMatrix"));
+	//	Scene::camera->sendCameraProjectionMatrixToShaderProgram(vectorOfModelsShadersTextures[i].shaderProgram->GetUniformLocation("projectionMatrix"));
+	//	vectorOfModelsShadersTextures[i].texture->Uniform1i(vectorOfModelsShadersTextures[i].shaderProgram->GetUniformLocation("textureUnitID"));
+	//	vectorOfModelsShadersTextures[i].drawableObject->model->bind_VAO();
+	//	vectorOfModelsShadersTextures[i].drawableObject->DrawArrays();
+	//}
 }
 
 void Scene::DrawAllObjectsWithSkybox()
-{
-
+{ 
+	int incrementor = 1;
+	glStencilFunc(GL_ALWAYS, incrementor, 0xFF);
 	Scene::model_shader_skybox.drawableObject->ClearModelMatrix();
 	Scene::model_shader_skybox.drawableObject->Translate(Scene::camera->GetCameraPosition());
 
@@ -73,6 +93,8 @@ void Scene::DrawAllObjectsWithSkybox()
 	vecSize = vectorOfModelsShaders.size();
 	for (int i = 0; i < vecSize; i++)
 	{
+		incrementor++;
+		glStencilFunc(GL_ALWAYS, incrementor, 0xFF);
 		vectorOfModelsShaders[i].shaderProgram->UseProgram();
 		vectorOfModelsShaders[i].drawableObject->UniformMatrix4fv(vectorOfModelsShaders[i].shaderProgram->GetUniformLocation("modelMatrix"));
 		Scene::camera->sendCameraViewMatrixToShaderProgram(vectorOfModelsShaders[i].shaderProgram->GetUniformLocation("viewMatrix"));
@@ -84,6 +106,8 @@ void Scene::DrawAllObjectsWithSkybox()
 	vecSize = vectorOfModelsShadersTextures.size();
 	for (int i = 0; i < vecSize; i++)
 	{
+		incrementor++;
+		glStencilFunc(GL_ALWAYS, incrementor, 0xFF);
 		vectorOfModelsShadersTextures[i].shaderProgram->UseProgram();
 		vectorOfModelsShadersTextures[i].drawableObject->UniformMatrix4fv(vectorOfModelsShadersTextures[i].shaderProgram->GetUniformLocation("modelMatrix"));
 		Scene::camera->sendCameraViewMatrixToShaderProgram(vectorOfModelsShadersTextures[i].shaderProgram->GetUniformLocation("viewMatrix"));

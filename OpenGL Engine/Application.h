@@ -31,6 +31,23 @@
 #include <vector>
 
 
+#include "Model.h"
+#include "ShaderProgram.h"
+#include "DrawableObject.h"
+#include "Scene.h"
+#include "Skybox.h"
+
+#include "Models/sphere.h"
+#include "Models/plain.h"
+#include "Models/plain_uv.h"
+#include "Models/suzi_flat.h"
+#include "Models/suzi_smooth.h"
+#include "Models/tree.h"
+#include "Models/gift.h"
+#include "Models/bushes.h"
+#include "Models/skycube.h"
+
+
 
 class Application
 {

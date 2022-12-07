@@ -39,10 +39,12 @@ public:
 	int vecSize;
 
 	Scene(int width, int height);
+	Scene(int width, int height, glm::vec3 cameraPosition, glm::vec3 cameraOrientation);
 	void AddToVectorModelsShaders(DrawableObject* receivedDrawableObject, ShaderProgram* receivedShaderProgram);
 	void AddToVectorModelsShadersTextures(DrawableObject* receivedDrawableObject, ShaderProgram* receivedShaderProgram, Texture* receivedTexture);
 	void AddSkybox(DrawableObject* receivedDrawableObject, ShaderProgram* receivedShaderProgram, Skybox* receivedSkybox);
 	void DrawAllObjects();
+	void DrawAllBalls();
 	void DrawAllObjectsWithSkybox();
 };
 
