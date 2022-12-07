@@ -126,21 +126,12 @@ void Scene::DrawAllObjects()
 		vectorOfModelsShaders[i].drawableObject->UniformMatrix4fv(vectorOfModelsShaders[i].shaderProgram->GetUniformLocation("modelMatrix"));
 		Scene::camera->sendCameraViewMatrixToShaderProgram(vectorOfModelsShaders[i].shaderProgram->GetUniformLocation("viewMatrix"));
 		Scene::camera->sendCameraProjectionMatrixToShaderProgram(vectorOfModelsShaders[i].shaderProgram->GetUniformLocation("projectionMatrix"));
+		Scene::camera->sendCameraPositionToShaderProgram(vectorOfModelsShaders[i].shaderProgram->GetUniformLocation("cameraPosition"));
+		Scene::camera->sendCameraOrientationToShaderProgram(vectorOfModelsShaders[i].shaderProgram->GetUniformLocation("cameraOrientation"));
 		vectorOfModelsShaders[i].drawableObject->model->bind_VAO();
 		vectorOfModelsShaders[i].drawableObject->DrawArrays();
 	}
 
-	//vecSize = vectorOfModelsShadersTextures.size();
-	//for (int i = 0; i < vecSize; i++)
-	//{
-	//	vectorOfModelsShadersTextures[i].shaderProgram->UseProgram();
-	//	vectorOfModelsShadersTextures[i].drawableObject->UniformMatrix4fv(vectorOfModelsShadersTextures[i].shaderProgram->GetUniformLocation("modelMatrix"));
-	//	Scene::camera->sendCameraViewMatrixToShaderProgram(vectorOfModelsShadersTextures[i].shaderProgram->GetUniformLocation("viewMatrix"));
-	//	Scene::camera->sendCameraProjectionMatrixToShaderProgram(vectorOfModelsShadersTextures[i].shaderProgram->GetUniformLocation("projectionMatrix"));
-	//	vectorOfModelsShadersTextures[i].texture->Uniform1i(vectorOfModelsShadersTextures[i].shaderProgram->GetUniformLocation("textureUnitID"));
-	//	vectorOfModelsShadersTextures[i].drawableObject->model->bind_VAO();
-	//	vectorOfModelsShadersTextures[i].drawableObject->DrawArrays();
-	//}
 }
 
 void Scene::DrawAllObjectsWithSkybox()

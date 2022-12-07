@@ -197,6 +197,46 @@ void Application::gameLoop()
 	ballScene.AddToVectorModelsShaders(&drawableBallDown, &ballPhongShaderProgram);
 	ballScene.AddToVectorModelsShaders(&drawableBallUp, &ballPhongShaderProgram);
 
+	// Scene to test multiple lights
+
+	Scene testScene(width, height, window);
+
+	Model testModel;
+	testModel.generate_VBO(sphere, sizeof(sphere), sizeof(sphere) / 6);
+	testModel.generate_VAO6();
+
+	Model testPlainModel;
+	testPlainModel.generate_VBO(plain, sizeof(plain), sizeof(plain) / 6);
+	testPlainModel.generate_VAO6();
+
+	ShaderProgram testShaderProgram;
+	testShaderProgram.AttachShaders("multipleLightsPhong.vert", "multipleLightsPhong.frag");
+	testShaderProgram.LinkProgram();
+	testShaderProgram.CheckLinkStatus();
+
+	DrawableObject testDrawable1 = DrawableObject(&testModel);
+	testDrawable1.Translate(glm::vec3(-20.0f, 3.0f, -10.0f));
+	testDrawable1.Scale(glm::vec3(1.0f));
+	DrawableObject testDrawable2 = DrawableObject(&testModel);
+	testDrawable2.Translate(glm::vec3(0.0f, 3.0f, -10.0f));
+	testDrawable2.Scale(glm::vec3(1.0f));
+	DrawableObject testDrawable3 = DrawableObject(&testModel);
+	testDrawable3.Translate(glm::vec3(20.0f, 3.0f, -10.0f));
+	testDrawable3.Scale(glm::vec3(1.0f));
+	DrawableObject testDrawable4 = DrawableObject(&testModel);
+	testDrawable4.Translate(glm::vec3(0.0f, 3.0f, 20.0f));
+	testDrawable4.Scale(glm::vec3(1.0f));
+
+	DrawableObject testDrawablePlain = DrawableObject(&testPlainModel);
+	testDrawablePlain.Scale(glm::vec3(100.0f));
+
+
+	testScene.AddToVectorModelsShaders(&testDrawable1, &testShaderProgram);
+	testScene.AddToVectorModelsShaders(&testDrawable2, &testShaderProgram);
+	testScene.AddToVectorModelsShaders(&testDrawable3, &testShaderProgram);
+	testScene.AddToVectorModelsShaders(&testDrawable4, &testShaderProgram);
+	testScene.AddToVectorModelsShaders(&testDrawablePlain, &testShaderProgram);
+
 	// Main Scene
 
 	Model houseModel;
@@ -349,7 +389,6 @@ void Application::gameLoop()
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_STENCIL_TEST);
-	//glEnable(GL_ALPHA_BITS);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 	while (!glfwWindowShouldClose(window)) {
 		// clear color and depth buffer
@@ -360,6 +399,9 @@ void Application::gameLoop()
 
 		//ballScene.camera->UpdateCamera(window);
 		//ballScene.DrawAllBalls();
+
+		//testScene.camera->UpdateCamera(window);
+		//testScene.DrawAllObjects();
 
 
 		mainScene.camera->UpdateCamera(window);

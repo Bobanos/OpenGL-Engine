@@ -137,6 +137,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DrawableObject.cpp" />
     <ClCompile Include="Launcher.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DrawableObject.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
@@ -162,6 +164,8 @@
     <None Include="default.vert" />
     <None Include="lambert.frag" />
     <None Include="lambert.vert" />
+    <None Include="multipleLightsPhong.frag" />
+    <None Include="multipleLightsPhong.vert" />
     <None Include="normalMap.frag" />
     <None Include="normalMap.vert" />
     <None Include="phong.frag" />

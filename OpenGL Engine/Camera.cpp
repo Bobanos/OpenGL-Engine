@@ -171,6 +171,11 @@ void Camera::sendCameraPositionToShaderProgram(GLint id)
 	glUniform3fv(id,1, glm::value_ptr(Camera::position));
 }
 
+void Camera::sendCameraOrientationToShaderProgram(GLint id)
+{
+	glUniform3fv(id, 1, glm::value_ptr(Camera::orientation));
+}
+
 glm::vec3 Camera::GetCameraPosition()
 {
 	return Camera::position;
