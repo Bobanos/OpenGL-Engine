@@ -37,6 +37,9 @@ public:
 	glm::vec3 GetCameraPosition();
 	glm::vec3 GetCameraOrientation();
 
+	glm::mat4 GetCameraView();
+	glm::mat4 GetCameraProjection();
+
 private:
 	glm::mat4 view;
 	glm::mat4 projection;

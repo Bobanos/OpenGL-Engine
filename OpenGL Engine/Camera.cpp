@@ -180,3 +180,13 @@ glm::vec3 Camera::GetCameraOrientation()
 {
 	return Camera::orientation;
 }
+
+glm::mat4 Camera::GetCameraView() 
+{
+	return Camera::view;
+}
+
+glm::mat4 Camera::GetCameraProjection()
+{
+	return Camera::projection;
+}

@@ -1,11 +1,27 @@
 #include "Scene.h"
 
-Scene::Scene(int width, int height) {
+Scene::Scene(int width, int height,	GLFWwindow* window, Model* treeModel, Texture* treeTexture, ShaderProgram* textureShader) {
 	Scene::camera = new Camera(width, height, glm::vec3(0.0f, 2.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+	Scene::window = window;
+
+	Scene::treeModel = treeModel;
+	Scene::treeTexture = treeTexture;
+	Scene::treeTextureShader = textureShader;
 }
 
-Scene::Scene(int width, int height, glm::vec3 cameraPosition, glm::vec3 cameraOrientation) {
+Scene::Scene(int width, int height, GLFWwindow* window) {
+	Scene::camera = new Camera(width, height, glm::vec3(0.0f, 2.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+	Scene::window = window;
+
+}
+
+Scene::Scene(int width, int height, GLFWwindow* window, Model* treeModel, Texture* treeTexture, ShaderProgram* textureShader, glm::vec3 cameraPosition, glm::vec3 cameraOrientation) {
 	Scene::camera = new Camera(width, height, cameraPosition, cameraOrientation); //broken for some reason
+	Scene::window = window;
+
+	Scene::treeModel = treeModel;
+	Scene::treeTexture = treeTexture;
+	Scene::treeTextureShader = textureShader;
 }
 
 void Scene::AddToVectorModelsShaders(DrawableObject *receivedDrawableObject, ShaderProgram *receivedShaderProgram)
@@ -40,6 +56,50 @@ void Scene::AddToVectorModelsShadersTexturesNormals(DrawableObject* receivedDraw
 	mstn.texture = receivedTexture;
 	mstn.normalMap = receivedNormalMap;
 	vectorOfModelsShadersTexturesNormals.push_back(mstn);
+}
+
+void Scene::AddTreeToVectorModelsShadersTextures(glm::vec3 treePosition) 
+{
+	DrawableObject* drawableTreeGenerated = new DrawableObject(Scene::treeModel);
+	drawableTreeGenerated->Translate(treePosition);
+	Scene::AddToVectorModelsShadersTextures(drawableTreeGenerated, Scene::treeTextureShader, Scene::treeTexture);
+}
+
+void Scene::CheckForClick()
+{
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && !clicked)
+	{
+		clicked = true;
+		int width, height;
+		double dx, dy;
+		int x, y;
+		glfwGetFramebufferSize(window, &width, &height);
+		glfwGetCursorPos(window, &dx, &dy);
+		x = int(dx);
+		y = int(dy);
+		GLbyte color[4];
+		GLfloat depth;
+		GLuint index; // identifikace tìlesa
+		int newy = height - y;
+		glReadPixels(x, newy, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &color);
+		glReadPixels(x, newy, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+		glReadPixels(x, newy, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
+		printf("Clicked on pixel %d, %d, color %02hhx%02hhx%02hhx%02hhx, depth % f, stencil index % u\n", x, y, color[0], color[1], color[2], color[3], depth, index);
+
+		glm::vec3 screenX = glm::vec3(x, newy, depth);
+		glm::mat4 view = camera->GetCameraView();
+		glm::mat4 projection = camera->GetCameraProjection();
+		glm::vec4 viewPort = glm::vec4(0, 0, width, height);
+		glm::vec3 pos = glm::unProject(screenX, view, projection, viewPort);
+
+		printf("unProject [%f,%f,%f]\n", pos.x, pos.y, pos.z);
+
+		Scene::AddTreeToVectorModelsShadersTextures(glm::vec3(pos.x, pos.y, pos.z));
+	}
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) 
+	{
+		clicked = false;
+	}
 }
 
 void Scene::DrawAllBalls()
