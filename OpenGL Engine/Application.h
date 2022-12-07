@@ -17,6 +17,7 @@
 //Include the standard C++ headers  
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 #include <SOIL.h>
 
@@ -46,7 +47,6 @@
 #include "Models/gift.h"
 #include "Models/bushes.h"
 #include "Models/skycube.h"
-
 
 
 class Application

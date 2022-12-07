@@ -34,7 +34,7 @@ void Application::window_iconify_callback(GLFWwindow* window, int iconified)
 void Application::window_size_callback(GLFWwindow* window, int width, int height)
 {
 	printf("resize %d, %d \n", width, height);
-	glViewport(0, 0, width, height);
+	//glViewport(0, 0, width, height);
 }
 
 void Application::cursor_callback(GLFWwindow* window, double cx, double cy)
@@ -333,6 +333,24 @@ void Application::gameLoop()
 	scene.AddToVectorModelsShadersTexturesNormals(&drawableNormalSphere, &normalMapShaderProgram, &sphereTexture, &sphereNormalMapTexture);
 	scene.AddToVectorModelsShadersTexturesNormals(&drawableNormalBox, &normalMapShaderProgram, &boxTexture, &boxNormalMapTexture);
 
+	srand(time(NULL));
+
+	for (int i = 0; i < 100; i++) {
+		DrawableObject* drawableTreeGenerated = new DrawableObject(&treeModel);
+		drawableTreeGenerated->Translate(glm::vec3((float)(rand() % 80 + 10), 0.0f, (float)(rand() % 40 + 10)));
+		drawableTreeGenerated->Translate(glm::vec3(-40.0f, 0.0f, 0.0f));
+		drawableTreeGenerated->Scale(glm::vec3((float)(rand() % 5) / 10));
+		scene.AddToVectorModelsShadersTextures(drawableTreeGenerated, &textureShader, &treeTexture);
+	}
+
+	for (int i = 0; i < 100; i++) {
+		DrawableObject* drawableZombieGenerated = new DrawableObject(&zombieModel);
+		drawableZombieGenerated->Translate(glm::vec3((float)(rand() % 40 + 10), 0.0f, (float)(rand() % 80 + 10)));
+		drawableZombieGenerated->Translate(glm::vec3(0.0f, 0.0f, -40.0f));
+		drawableZombieGenerated->Rotate((float)(rand() % 360), glm::vec3(0.0f, 1.0f, 0.0f));
+		scene.AddToVectorModelsShadersTextures(drawableZombieGenerated, &textureShader, &zombieTexture);
+	}
+
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_STENCIL_TEST);
@@ -347,8 +365,6 @@ void Application::gameLoop()
 		//ballScene.camera->UpdateWorldWidthAndHeight(Application::width, Application::height);
 		//ballScene.camera->UpdateCamera(window);
 		//ballScene.DrawAllBalls();
-
-
 
 
 		scene.camera->UpdateWorldWidthAndHeight(Application::width, Application::height);

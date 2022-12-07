@@ -59,6 +59,12 @@ void Camera::UpdateWorldWidthAndHeight(int p_worldWidth, int p_worldHeight)
 
 void Camera::UpdateCamera(GLFWwindow* window)
 {
+	int width;
+	int height;
+	glfwGetFramebufferSize(window, &width, &height);
+	glViewport(0, 0, width, height);
+	Camera::UpdateWorldWidthAndHeight(width, height);
+
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
@@ -92,7 +98,6 @@ void Camera::UpdateCamera(GLFWwindow* window)
 	{
 		speed = 0.01f;
 	}
-
 
 	// Handles mouse inputs
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
