@@ -37,6 +37,40 @@ void Model::loadModelFromFile(std::string modelFileName)
 	}
 }
 
+void Model::loadModelFromFileForNormalMap(std::string modelFileName)
+{
+	Assimp::Importer importer;
+	unsigned int importOptions = aiProcess_Triangulate
+		| aiProcess_OptimizeMeshes              // slouèení malých plošek
+		| aiProcess_JoinIdenticalVertices       // NUTNÉ jinak hodnì duplikuje
+		| aiProcess_Triangulate                 // prevod vsech ploch na trojuhelniky
+		| aiProcess_CalcTangentSpace;           // vypocet tangenty, nutny pro spravne pouziti normalove mapy
+	const aiScene* aisceneP = importer.ReadFile(modelFileName.c_str(), importOptions);
+	if (aisceneP) {
+		aiMesh* mesh = aisceneP->mMeshes[0];
+		for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+			for (unsigned int j = 0; j < 3; j++)
+			{
+				Model::data.push_back(mesh->mVertices[mesh->mFaces[i].mIndices[j]].x);
+				Model::data.push_back(mesh->mVertices[mesh->mFaces[i].mIndices[j]].y);
+				Model::data.push_back(mesh->mVertices[mesh->mFaces[i].mIndices[j]].z);
+				Model::data.push_back(mesh->mNormals[mesh->mFaces[i].mIndices[j]].x);
+				Model::data.push_back(mesh->mNormals[mesh->mFaces[i].mIndices[j]].y);
+				Model::data.push_back(mesh->mNormals[mesh->mFaces[i].mIndices[j]].z);
+				Model::data.push_back(mesh->mTextureCoords[0][mesh->mFaces[i].mIndices[j]].x);
+				Model::data.push_back(mesh->mTextureCoords[0][mesh->mFaces[i].mIndices[j]].y);
+				Model::data.push_back(mesh->mTangents[mesh->mFaces[i].mIndices[j]].x);
+				Model::data.push_back(mesh->mTangents[mesh->mFaces[i].mIndices[j]].y);
+				Model::data.push_back(mesh->mTangents[mesh->mFaces[i].mIndices[j]].z);
+			}
+		}
+	}
+	else {
+		printf("Could not load model file named: %s, %s", modelFileName.c_str(), importer.GetErrorString());
+		exit(EXIT_FAILURE);
+	}
+}
+
 void Model::generate_VBO(const float model_data[], int size_of_data, int count)
 {
 	//vertex buffer object (VBO)
@@ -57,6 +91,36 @@ void Model::generate_VBO(std::string modelFileName)
 	glBufferData(GL_ARRAY_BUFFER, Model::data.size() * sizeof(float), &Model::data[0], GL_STATIC_DRAW); // TODO
 
 	Model::count_of_indices = Model::data.size() / 8;
+}
+
+void Model::generate_VBOMap(std::string modelFileName)
+{
+	Model::loadModelFromFileForNormalMap(modelFileName);
+
+	//vertex buffer object (VBO)
+	glGenBuffers(1, &VBO); // generate the VBO
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, Model::data.size() * sizeof(float), &Model::data[0], GL_STATIC_DRAW); // TODO
+
+	Model::count_of_indices = Model::data.size() / 11;
+
+}
+
+void Model::generate_VAO11()
+{
+	//Vertex Array Object (VAO)
+	glGenVertexArrays(1, &VAO); //generate the VAO
+	bind_VAO();
+	glEnableVertexAttribArray(0); //enable vertex attributes
+	glEnableVertexAttribArray(1); //enable vertex attributes
+	glEnableVertexAttribArray(2); //enable vertex attributes
+	glEnableVertexAttribArray(3); //enable vertex attributes
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	//TODO
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), NULL); //Cordinates
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (GLvoid*)(3 * sizeof(GLfloat))); //Normal
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (GLvoid*)(6 * sizeof(GLfloat))); //Texture uv
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (GLvoid*)(8 * sizeof(GLfloat))); //Texture uv
 }
 
 void Model::generate_VAO8()

@@ -162,6 +162,8 @@
     <None Include="default.vert" />
     <None Include="lambert.frag" />
     <None Include="lambert.vert" />
+    <None Include="normalMap.frag" />
+    <None Include="normalMap.vert" />
     <None Include="phong.frag" />
     <None Include="phong.vert" />
     <None Include="skybox.frag" />

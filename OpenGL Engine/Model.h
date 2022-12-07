@@ -26,6 +26,7 @@ private:
 	GLuint VAO;
 	GLsizei count_of_indices;
 	void loadModelFromFile(std::string modelFileName);
+	void loadModelFromFileForNormalMap(std::string modelFileName);
 	std::vector<float> data;
 
 public:
@@ -33,6 +34,8 @@ public:
 
 	void generate_VBO(const float model_data[], int size_of_data, int count);
 	void generate_VBO(std::string modelFileName);
+	void generate_VBOMap(std::string modelFileName);
+	void generate_VAO11();
 	void generate_VAO8();
 	void generate_VAO6();
 	void generate_skybox_VAO();

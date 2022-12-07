@@ -118,6 +118,12 @@
     <None Include="skybox.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="normalMap.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="normalMap.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\test.png">

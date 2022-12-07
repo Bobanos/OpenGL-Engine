@@ -197,7 +197,43 @@ void Application::gameLoop()
 	ballScene.AddToVectorModelsShaders(&drawableBallDown, &ballPhongShaderProgram);
 	ballScene.AddToVectorModelsShaders(&drawableBallUp, &ballPhongShaderProgram);
 
+	// Test Scene for normal mapping
 
+	Scene normalMapScene(width, height);
+
+	Model normalSphereModel;
+	normalSphereModel.generate_VBOMap("Models/sphere.obj");
+	normalSphereModel.generate_VAO11();
+
+	Model normalBoxModel;
+	normalBoxModel.generate_VBOMap("Models/box.obj");
+	normalBoxModel.generate_VAO11();
+
+	DrawableObject drawableNormalSphere = DrawableObject(&normalSphereModel);
+	drawableNormalSphere.Translate(glm::vec3(-3.0f, 3.0f, 0.0f));
+	DrawableObject drawableNormalBox = DrawableObject(&normalBoxModel);
+	drawableNormalBox.Translate(glm::vec3(3.0f, 3.0f, -.0f));
+
+	ShaderProgram normalMapShaderProgram;
+	normalMapShaderProgram.AttachShaders("normalMap.vert", "normalMap.frag");
+	normalMapShaderProgram.LinkProgram();
+	normalMapShaderProgram.CheckLinkStatus();
+
+	Texture sphereTexture(1);
+	sphereTexture.LoadTexture("Textures/sphere.png");
+	sphereTexture.BindTexture();
+
+	Texture sphereNormalMapTexture(2);
+	sphereNormalMapTexture.LoadTexture("Textures/spherenormalmap.png");
+	sphereNormalMapTexture.BindTexture();
+
+	Texture boxTexture(3);
+	boxTexture.LoadTexture("Textures/box.png");
+	boxTexture.BindTexture();
+
+	Texture boxNormalMapTexture(4);
+	boxNormalMapTexture.LoadTexture("Textures/boxnormalmap.png");
+	boxNormalMapTexture.BindTexture();
 
 	// Main Scene
 
@@ -237,9 +273,9 @@ void Application::gameLoop()
 	drawableTree2.Scale(glm::vec3(0.1f));
 
 	Model skycubeModel;
-	DrawableObject drawableOSkycube = DrawableObject(&skycubeModel);
-	drawableOSkycube.model->generate_VBO(skycube, sizeof(skycube), sizeof(skycube) / 3);
-	drawableOSkycube.model->generate_skybox_VAO();
+	DrawableObject drawableSkycube = DrawableObject(&skycubeModel);
+	drawableSkycube.model->generate_VBO(skycube, sizeof(skycube), sizeof(skycube) / 3);
+	drawableSkycube.model->generate_skybox_VAO();
 
 
 	ShaderProgram shader_program;
@@ -288,12 +324,14 @@ void Application::gameLoop()
 	zombieTexture.BindTexture();
 	
 
-	scene.AddSkybox(&drawableOSkycube, &skyboxShader, &skybox);
+	scene.AddSkybox(&drawableSkycube, &skyboxShader, &skybox);
 	scene.AddToVectorModelsShadersTextures(&drawableHouse, &textureShader, &houseTexture);
 	scene.AddToVectorModelsShadersTextures(&drawableZombie1, &textureShader, &zombieTexture);
 	scene.AddToVectorModelsShadersTextures(&drawableTerrain, &textureShader, &grassTexture);
 	scene.AddToVectorModelsShadersTextures(&drawableTree1, &textureShader, &treeTexture);
 	scene.AddToVectorModelsShadersTextures(&drawableTree2, &textureShader, &treeTexture);
+	scene.AddToVectorModelsShadersTexturesNormals(&drawableNormalSphere, &normalMapShaderProgram, &sphereTexture, &sphereNormalMapTexture);
+	scene.AddToVectorModelsShadersTexturesNormals(&drawableNormalBox, &normalMapShaderProgram, &boxTexture, &boxNormalMapTexture);
 
 
 	glEnable(GL_DEPTH_TEST);
@@ -306,16 +344,16 @@ void Application::gameLoop()
 		// draw all objects
 
 
-		ballScene.camera->UpdateWorldWidthAndHeight(Application::width, Application::height);
-		ballScene.camera->UpdateCamera(window);
-		ballScene.DrawAllBalls();
+		//ballScene.camera->UpdateWorldWidthAndHeight(Application::width, Application::height);
+		//ballScene.camera->UpdateCamera(window);
+		//ballScene.DrawAllBalls();
 
 
 
 
-		//scene.camera->UpdateWorldWidthAndHeight(Application::width, Application::height);
-		//scene.camera->UpdateCamera(window);
-		//scene.DrawAllObjectsWithSkybox();
+		scene.camera->UpdateWorldWidthAndHeight(Application::width, Application::height);
+		scene.camera->UpdateCamera(window);
+		scene.DrawAllObjectsWithSkybox();
 
 		// update other events like input handling
 		glfwPollEvents();

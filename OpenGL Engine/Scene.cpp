@@ -32,6 +32,16 @@ void Scene::AddSkybox(DrawableObject* receivedDrawableObject, ShaderProgram* rec
 	Scene::model_shader_skybox.skybox = receivedSkybox;
 }
 
+void Scene::AddToVectorModelsShadersTexturesNormals(DrawableObject* receivedDrawableObject, ShaderProgram* receivedShaderProgram, Texture* receivedTexture, Texture* receivedNormalMap) 
+{
+	model_shader_texture_normalMap mstn;
+	mstn.drawableObject = receivedDrawableObject;
+	mstn.shaderProgram = receivedShaderProgram;
+	mstn.texture = receivedTexture;
+	mstn.normalMap = receivedNormalMap;
+	vectorOfModelsShadersTexturesNormals.push_back(mstn);
+}
+
 void Scene::DrawAllBalls()
 {
 	vecSize = vectorOfModelsShaders.size();
@@ -115,6 +125,22 @@ void Scene::DrawAllObjectsWithSkybox()
 		vectorOfModelsShadersTextures[i].texture->Uniform1i(vectorOfModelsShadersTextures[i].shaderProgram->GetUniformLocation("textureUnitID"));
 		vectorOfModelsShadersTextures[i].drawableObject->model->bind_VAO();
 		vectorOfModelsShadersTextures[i].drawableObject->DrawArrays();
+	}
+
+	vecSize = vectorOfModelsShadersTexturesNormals.size();
+	for (int i = 0; i < vecSize; i++)
+	{
+		incrementor++;
+		glStencilFunc(GL_ALWAYS, incrementor, 0xFF);
+		vectorOfModelsShadersTexturesNormals[i].shaderProgram->UseProgram();
+		vectorOfModelsShadersTexturesNormals[i].drawableObject->UniformMatrix4fv(vectorOfModelsShadersTexturesNormals[i].shaderProgram->GetUniformLocation("modelMatrix"));
+		Scene::camera->sendCameraViewMatrixToShaderProgram(vectorOfModelsShadersTexturesNormals[i].shaderProgram->GetUniformLocation("viewMatrix"));
+		Scene::camera->sendCameraProjectionMatrixToShaderProgram(vectorOfModelsShadersTexturesNormals[i].shaderProgram->GetUniformLocation("projectionMatrix"));
+		Scene::camera->sendCameraPositionToShaderProgram(vectorOfModelsShadersTexturesNormals[i].shaderProgram->GetUniformLocation("cameraPos"));
+		vectorOfModelsShadersTexturesNormals[i].texture->Uniform1i(vectorOfModelsShadersTexturesNormals[i].shaderProgram->GetUniformLocation("UIAlbedo"));
+		vectorOfModelsShadersTexturesNormals[i].normalMap->Uniform1i(vectorOfModelsShadersTexturesNormals[i].shaderProgram->GetUniformLocation("UINormal"));
+		vectorOfModelsShadersTexturesNormals[i].drawableObject->model->bind_VAO();
+		vectorOfModelsShadersTexturesNormals[i].drawableObject->DrawArrays();
 	}
 
 

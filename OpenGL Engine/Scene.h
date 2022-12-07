@@ -28,13 +28,22 @@ public:
 		ShaderProgram* shaderProgram;
 		Skybox* skybox;
 	};
+
+	struct model_shader_texture_normalMap {
+		DrawableObject* drawableObject;
+		ShaderProgram* shaderProgram;
+		Texture* texture;
+		Texture* normalMap;
+	};
 	
 	std::vector<model_shader> vectorOfModelsShaders;
 	std::vector<model_shader_texture> vectorOfModelsShadersTextures;
+	model_shader_skybox model_shader_skybox;
+	std::vector<model_shader_texture_normalMap> vectorOfModelsShadersTexturesNormals;
 
 	Camera* camera;
 
-	model_shader_skybox model_shader_skybox;
+
 
 	int vecSize;
 
@@ -42,6 +51,7 @@ public:
 	Scene(int width, int height, glm::vec3 cameraPosition, glm::vec3 cameraOrientation);
 	void AddToVectorModelsShaders(DrawableObject* receivedDrawableObject, ShaderProgram* receivedShaderProgram);
 	void AddToVectorModelsShadersTextures(DrawableObject* receivedDrawableObject, ShaderProgram* receivedShaderProgram, Texture* receivedTexture);
+	void AddToVectorModelsShadersTexturesNormals(DrawableObject* receivedDrawableObject, ShaderProgram* receivedShaderProgram, Texture* receivedTexture, Texture* receivedNormalMap);
 	void AddSkybox(DrawableObject* receivedDrawableObject, ShaderProgram* receivedShaderProgram, Skybox* receivedSkybox);
 	void DrawAllObjects();
 	void DrawAllBalls();
